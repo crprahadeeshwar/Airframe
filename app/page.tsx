@@ -1,11 +1,9 @@
 import React from 'react'
+import DashboardPage from './dashboard/page'
 
 const page = () => {
   return (
-    <div>
-      <h1>Airframe</h1>
-      <p>Personal Flight Logging.</p>
-    </div>
+      <DashboardPage />
   )
 }
 
