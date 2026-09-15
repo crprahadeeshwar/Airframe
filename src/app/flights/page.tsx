@@ -1,5 +1,5 @@
-import Sidebar from "@/components/sidebar/sidebar";
-import FlightContent from "@/components/flightContent/flightContent";
+import Sidebar from "@/src/components/shared/sidebar/sidebar";
+import FlightContent from "@/src/components/shared/flightContent/flightContent";
 
 export default function FlightsPage() {
     return (
