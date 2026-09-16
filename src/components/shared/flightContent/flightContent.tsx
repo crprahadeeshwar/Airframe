@@ -1,6 +1,6 @@
 import FlightHeader from "./flightHeader";
 import FlightTable from "../table/flightTable";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 
 
 export default function FlightContent() {

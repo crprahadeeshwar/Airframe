@@ -33,6 +33,16 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
+# Local environment variables
+.env
+.env*.local
+
+# If you want to strictly follow Next.js recommendations:
+.env.development.local
+.env.production.local
+.env.test.local
+
+
 # vercel
 .vercel
 
