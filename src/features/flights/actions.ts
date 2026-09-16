@@ -36,7 +36,7 @@ export async function fetchFlightsById(flightId: string) {
     } 
     return flightData;
 };
-
+ 
 
 export async function fetchFlightsByUserId(userId: string) {
     
