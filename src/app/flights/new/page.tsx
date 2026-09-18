@@ -1,6 +1,6 @@
 import React from 'react';
 
-interface NewFlightData {
+type NewFlightData = {
     flightNumber: string | null,
     date: string | null,
     departure: string | null,
