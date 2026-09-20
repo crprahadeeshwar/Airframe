@@ -1,37 +1,95 @@
 import { Button } from "../../ui/button"
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../../ui/card"
+import { ArrowRight, Plane } from "lucide-react"
+import { deleteFlightById } from "@/src/features/actions/deleteFlights"
+
 export default function FlightDetailsCard() {
 
-    return(
-        <div className=" border-2 rounded-2xl m-4 p-4 max-w-200 max-h-300 min-h-100">
-            <div className="flex flex-col items-center border-2 rounded-lg p-2">
-                <h1>Flight Reg</h1>
-            </div>
-            <div className="flex flex-row justify-between m-10">
-                <div className="border rounded-3xl p-4"> Aircraft </div>
-                <div className="border rounded-3xl p-4"> Flight No. </div>
-                <div className="border rounded-3xl p-4"> Airline </div>
-            </div>
-            <div className="flex flex-row justify-between m-20">
-                <div className="border p-4 rounded-2xl"> From </div>
-                <div> Icon </div>
-                <div className="border p-4 rounded-2xl"> To </div>
-            </div>
-            <div className="flex flex-col items-center m-4">
-                <div> Date </div>
-            </div>
-            <div className="flex flex-col items-center m-4 border rounded-3xl min-h-20">
-                <div> Notes </div>
-            </div>
-            <div className="flex flex-row justify-between">
-                <div>
-                    <Button variant={"outline"}> Edit </Button>
-                </div>
-                <div>
-                    <Button variant={"destructive"}> Delete </Button>
-                </div>
-            </div>
+    function handleDelete() {
+        //Delete flight by flight ID
+    }
+
+  return (
+    <Card className="m-4 w-full max-w-2xl">
+      
+      {/* Registration */}
+      <CardHeader className="items-center text-center border-b">
+        <CardTitle className="text-2xl">
+          A6-EQH
+        </CardTitle>
+        <p className="text-sm text-muted-foreground">
+          Flight Registration
+        </p>
+      </CardHeader>
+
+      <CardContent className="space-y-8 pt-6">
+
+        {/* Aircraft / Flight Number / Airline */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <div className="rounded-xl border p-4 text-center">
+            <p className="text-sm text-muted-foreground">Aircraft</p>
+            <p className="mt-1 font-medium">B777-300ER</p>
+          </div>
+
+          <div className="rounded-xl border p-4 text-center">
+            <p className="text-sm text-muted-foreground">Flight No.</p>
+            <p className="mt-1 font-medium">EK525</p>
+          </div>
+
+          <div className="rounded-xl border p-4 text-center">
+            <p className="text-sm text-muted-foreground">Airline</p>
+            <p className="mt-1 font-medium">Emirates</p>
+          </div>
         </div>
-    )
 
+        {/* Route */}
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex-1 rounded-xl border p-4 text-center">
+            <p className="text-sm text-muted-foreground">From</p>
+            <p className="mt-1 text-2xl font-semibold">HYD</p>
+          </div>
 
+          <ArrowRight className="shrink-0 text-muted-foreground" />
+
+          <div className="flex-1 rounded-xl border p-4 text-center">
+            <p className="text-sm text-muted-foreground">To</p>
+            <p className="mt-1 text-2xl font-semibold">DXB</p>
+          </div>
+        </div>
+
+        {/* Date */}
+        <div className="text-center">
+          <p className="text-sm text-muted-foreground">Date</p>
+          <p className="mt-1 font-medium">20 September 2026</p>
+        </div>
+
+        {/* Notes */}
+        <div className="rounded-xl border p-4">
+          <p className="text-sm text-muted-foreground">Notes</p>
+          <p className="mt-2">
+            Window seat. Great view of the wing during departure.
+          </p>
+        </div>
+
+      </CardContent>
+
+      {/* Actions */}
+      <CardFooter className="flex justify-between border-t">
+        <Button variant="outline">
+          Edit
+        </Button>
+
+        <Button variant="destructive" onClick={handleDelete}>
+          Delete
+        </Button>
+      </CardFooter>
+
+    </Card>
+  )
 }
