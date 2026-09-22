@@ -1,4 +1,4 @@
-
+import FlightCard from "../dashContent/flightCards"
 
 interface FlightTableProps {
     flights: {
@@ -12,6 +12,7 @@ interface FlightTableProps {
 }
 
 export default function FlightTableRow( {flights}: FlightTableProps) {
+
     return(
         <div className="flex flex-col gap-2">
             {flights.map((flight, index) => (
