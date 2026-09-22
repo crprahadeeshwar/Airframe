@@ -1,11 +1,14 @@
-import React, { ReactHTMLElement } from 'react';
-import { type FlightInput } from '@/src/schemas/flightSchemas';
+'use client'
+
+import React from 'react';
 import { Calendar } from '@/src/components/ui/calendar';
 import { Button } from '@/src/components/ui/button';
 import { Popover, PopoverTrigger, PopoverContent } from '@/src/components/ui/popover';
 import createFlight from '@/src/features/actions/createFlights';
 
 export default function NewFlightForm() {
+
+  const [date, setDate] = React.useState<Date | undefined>(undefined);
 
   return(
   <form action={createFlight}>
@@ -20,7 +23,8 @@ export default function NewFlightForm() {
 
       <div className="rounded-2xl border p-6 shadow-sm">
 
-        {/* Flight Information */}
+        //Flight Information
+
         <section>
           <h2 className="text-lg font-semibold">
             Flight Information
@@ -32,7 +36,7 @@ export default function NewFlightForm() {
               <span className="text-sm font-medium">Flight Number</span>
               <input
                 type="text"
-                name="flightNumber"
+                name="flight_number"
                 placeholder="EK525"
                 className="rounded-md border bg-background px-3 py-2"
               />
@@ -42,7 +46,7 @@ export default function NewFlightForm() {
               <span className="text-sm font-medium">Date</span>
 
               <Popover>
-                <PopoverTrigger asChild>
+                <PopoverTrigger>
                   <Button
                     variant="outline"
                     type="button"
@@ -76,7 +80,7 @@ export default function NewFlightForm() {
               <span className="text-sm font-medium">Aircraft Type</span>
               <input
                 type="text"
-                name="aircraft"
+                name="aircraft_type"
                 placeholder="B777-300ER"
                 className="rounded-md border bg-background px-3 py-2"
               />
@@ -86,7 +90,8 @@ export default function NewFlightForm() {
         </section>
 
 
-        {/* Aircraft */}
+        //Aircraft 
+
         <section className="mt-8">
           <h2 className="text-lg font-semibold">
             Aircraft
@@ -106,7 +111,8 @@ export default function NewFlightForm() {
         </section>
 
 
-        {/* Route */}
+        //Route 
+
         <section className="mt-8">
           <h2 className="text-lg font-semibold">
             Route
@@ -142,7 +148,8 @@ export default function NewFlightForm() {
         </section>
 
 
-        {/* Notes */}
+        //Notes 
+
         <section className="mt-8">
           <h2 className="text-lg font-semibold">
             Notes
@@ -162,7 +169,8 @@ export default function NewFlightForm() {
         </section>
 
 
-        {/* Actions */}
+        //Actions
+        
         <div className="mt-8 flex justify-end gap-3 border-t pt-6">
           <Button
             type="button"

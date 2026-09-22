@@ -2,25 +2,23 @@
 
 import { createClient } from "@/src/lib/supabase/server";
 import { revalidatePath } from "next/cache";
-import * as z from "zod";
+import type { UUID } from "@/src/schemas/flightSchemas";
 
-const deleteFlightSchema = z.string()
 
-export async function deleteFlightById(flightId: string) {
+export async function deleteFlightById(flightId: UUID) {
 
     const supabase = await createClient();
-    const Id =  deleteFlightSchema.parse(flightId)
-    const {data: {user} } = await supabase.auth.getUser();
-
+    /*const {data: {user} } = await supabase.auth.getUser();
+    
     if (!user) throw new Error("Unauthorised!");
+    */
 
-    const userId = deleteFlightSchema.parse(user.id);
 
     const { error } = await supabase
         .from('flights')
         .delete()
-        .eq('id', Id)
-        .eq('user_id', userId);
+        .eq('id', flightId);
+        // .eq('user_id', user.id);
 
     if (error) throw new Error(error.message)
     

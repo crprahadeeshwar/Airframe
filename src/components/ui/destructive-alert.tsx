@@ -1,3 +1,5 @@
+'use client';
+
 import { Trash2Icon } from "lucide-react"
 
 import {
@@ -13,9 +15,18 @@ import {
   AlertDialogTrigger,
 } from "./alert-dialog"
 import { Button } from "./button"
+import type { UUID } from "@/src/schemas/flightSchemas"
+import { deleteFlightById } from "@/src/features/actions/deleteFlights"
 
+interface AlertDialogDestructiveProp {
+  flightId: UUID;
+};
 
-export function AlertDialogDestructive() {
+export function AlertDialogDestructive( { flightId } : AlertDialogDestructiveProp) {
+
+  const handleDelete = async () => {
+    deleteFlightById(flightId);
+  }
   return (
     <AlertDialog>
       <AlertDialogTrigger
@@ -28,12 +39,13 @@ export function AlertDialogDestructive() {
           </AlertDialogMedia>
           <AlertDialogTitle>Delete record?</AlertDialogTitle>
           <AlertDialogDescription>
-            This will permanently delete this record. View{" "}
+            This will permanently delete this record. 
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel variant="outline">Cancel</AlertDialogCancel>
-          <AlertDialogAction variant="destructive">Delete</AlertDialogAction>
+          <AlertDialogAction variant="destructive"
+          onClick={handleDelete}>Delete</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

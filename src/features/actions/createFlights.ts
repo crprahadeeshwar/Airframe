@@ -10,30 +10,28 @@ import { redirect } from 'next/navigation';
 export default async function createFlight(formData: FormData) {
 
     const formValues = {
-        flightNumber: formData.get("flightNumber"),
+        flight_number: formData.get("flight_number"),
         date: formData.get("date"),
         departure: formData.get("departure"),
         arrival: formData.get("arrival"),
         airline: formData.get("airline"),
-        aircraft: formData.get("aircraft"),
+        aircraft_type: formData.get("aircraft_type"),
         registration: formData.get("registration"),
         notes: formData.get("notes"),
     };
 
     const supabase = await createClient();
     
+    /*
     const{ data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error("Unauthorised!");
+    */
 
     const flightData =  FlightSchema.parse(formValues)
 
-    const insertData = {
-        ...flightData,
-        user_id: user.id
-    }
     const { error } = await supabase
     .from('flights')
-    .insert(insertData);
+    .insert(flightData);
 
     if(error) throw new Error(error.message);
 
