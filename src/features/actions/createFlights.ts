@@ -2,7 +2,7 @@
 
 import { createClient } from "@/src/lib/supabase/server";
 import { revalidatePath } from "next/cache";
-import { FlightSchema, type FlightInput } from "@/src/schemas/flightSchemas";
+import { FlightSchema } from "@/src/schemas/flightSchemas";
 import { redirect } from 'next/navigation';
 
 
@@ -20,18 +20,20 @@ export async function createFlight(formData: FormData) {
         notes: formData.get("notes"),
     };
 
-    const supabase = await createClient();
-    
-    /*
-    const{ data: { user } } = await supabase.auth.getUser();
-    if (!user) throw new Error("Unauthorised!");
-    */
-
     const flightData =  FlightSchema.parse(formValues)
 
+    const supabase = await createClient();
+    
+    const{ data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error("Unauthorised!");
+
+    const insertData = ({
+        ...flightData,
+        user_id: user.id
+    })
     const { error } = await supabase
     .from('flights')
-    .insert(flightData);
+    .insert(insertData);
 
     if(error) throw new Error(error.message);
 
