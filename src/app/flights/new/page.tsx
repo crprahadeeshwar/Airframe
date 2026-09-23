@@ -4,7 +4,7 @@ import React from 'react';
 import { Calendar } from '@/src/components/ui/calendar';
 import { Button } from '@/src/components/ui/button';
 import { Popover, PopoverTrigger, PopoverContent } from '@/src/components/ui/popover';
-import createFlight from '@/src/features/actions/createFlights';
+import { createFlight } from '@/src/features/actions/createFlights';
 
 export default function NewFlightForm() {
 

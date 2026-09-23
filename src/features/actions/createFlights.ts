@@ -7,7 +7,7 @@ import { redirect } from 'next/navigation';
 
 
 
-export default async function createFlight(formData: FormData) {
+export async function createFlight(formData: FormData) {
 
     const formValues = {
         flight_number: formData.get("flight_number"),

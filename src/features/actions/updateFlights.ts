@@ -6,7 +6,7 @@ import { uuidSchema, FlightSchema } from "@/src/schemas/flightSchemas";
 
 
 
-export default async function updateFlight(flightId: string, rawValues: FormData) {
+export async function updateFlight(flightId: string, rawValues: FormData) {
 
     const formValues = {
         flight_number: rawValues.get("flight_number"),

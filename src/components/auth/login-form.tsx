@@ -12,6 +12,8 @@ import {
 } from "./auth-ui/field"
 import { Input } from "./auth-ui/input"
 import { GalleryVerticalEndIcon } from "lucide-react"
+import { login } from "@/src/features/actions/auth/login"
+
 
 export function LoginForm({
   className,
@@ -19,7 +21,7 @@ export function LoginForm({
 }: React.ComponentProps<"div">) {
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <form>
+      <form action={login}>
         <FieldGroup>
           <div className="flex flex-col items-center gap-2 text-center">
             <a
@@ -33,7 +35,7 @@ export function LoginForm({
             </a>
             <h1 className="text-xl font-bold">Welcome to Acme Inc.</h1>
             <FieldDescription>
-              Don&apos;t have an account? <a href="#">Sign up</a>
+              Don&apos;t have an account? <a href="/signup">Sign up</a>
             </FieldDescription>
           </div>
           <Field>
@@ -41,7 +43,17 @@ export function LoginForm({
             <Input
               id="email"
               type="email"
+              name="email"
               placeholder="m@example.com"
+              required
+            />
+          </Field>
+          <Field>
+            <FieldLabel htmlFor="password">Password</FieldLabel>
+            <Input
+              id="password"
+              type="password"
+              name="password"
               required
             />
           </Field>

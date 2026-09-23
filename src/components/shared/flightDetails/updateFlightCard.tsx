@@ -4,7 +4,7 @@ import {
   CardContent,
   CardHeader,
 } from "../../ui/card"
-import updateFlight from '@/src/features/actions/updateFlights'
+import { updateFlight } from '@/src/features/actions/updateFlights'
 import { fetchFlightsById } from '@/src/features/actions/readFlights'
 import type { UUID, FlightInput } from '@/src/schemas/flightSchemas'
 

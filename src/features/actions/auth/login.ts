@@ -4,7 +4,7 @@ import { createClient } from "@/src/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { EmailSchema, PasswordSchema } from "@/src/schemas/flightSchemas";
 
-export default async function login(formData: FormData) {
+export async function login(formData: FormData) {
 
     const supabase = await createClient();
     const email = EmailSchema.parse(formData.get('email'));
