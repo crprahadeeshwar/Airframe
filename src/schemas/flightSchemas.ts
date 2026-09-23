@@ -17,11 +17,17 @@ const FlightSchema = z.object({
   notes: z.string().nullable().transform(emptyToNull),
 });
 
+const EmailSchema = z.email();
+const PasswordSchema = z.string();
 
 export {
     uuidSchema, 
-    FlightSchema
+    FlightSchema,
+    EmailSchema,
+    PasswordSchema
 }
 
 export type FlightInput = z.infer<typeof FlightSchema>;
 export type UUID = z.infer<typeof uuidSchema>;
+export type Email = z.infer<typeof EmailSchema>;
+export type Password = z.infer<typeof PasswordSchema>;
