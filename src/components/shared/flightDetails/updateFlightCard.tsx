@@ -4,16 +4,16 @@ import {
   CardContent,
   CardHeader,
 } from "../../ui/card"
-import updateFlight from '@/src/features/actions/updateFlights'
+import { updateFlight } from '@/src/features/actions/updateFlights'
 import { fetchFlightsById } from '@/src/features/actions/readFlights'
-import type { UUID, FlightInput } from '@/src/schemas/flightSchemas'
+import type { UUID, FlightTypeSchema } from '@/src/schemas/flightSchemas'
 
 
 interface UpdateFlightDetailsCardProps {
   flightId: UUID
 }
 export default async function UpdateFlightDetailsCard({ flightId }: UpdateFlightDetailsCardProps) {
-  const flightDataRaw: FlightInput = await fetchFlightsById(flightId);
+  const flightDataRaw: FlightTypeSchema = await fetchFlightsById(flightId);
 
   const updateFlightViaForm = updateFlight.bind(null, flightId);
 
@@ -32,7 +32,6 @@ export default async function UpdateFlightDetailsCard({ flightId }: UpdateFlight
         <form action={updateFlightViaForm}>
           <div className="space-y-8">
 
-            //Flight Information
             
             <section>
               <div className="mb-4">
@@ -68,7 +67,7 @@ export default async function UpdateFlightDetailsCard({ flightId }: UpdateFlight
                   <input
                     type="date"
                     name="date"
-                    defaultValue={String(flightDataRaw?.date) ?? ""}
+                    defaultValue={flightDataRaw?.date ? flightDataRaw.date.toISOString().split("T")[0] : ""}                    
                     className="rounded-md border bg-background px-3 py-2"
                   />
                 </label>
@@ -104,7 +103,6 @@ export default async function UpdateFlightDetailsCard({ flightId }: UpdateFlight
               </div>
             </section>
 
-            //Aircraft
 
             <section>
               <div className="mb-4">
@@ -131,7 +129,6 @@ export default async function UpdateFlightDetailsCard({ flightId }: UpdateFlight
               </label>
             </section>
 
-            //Route
 
             <section>
               <div className="mb-4">
@@ -180,8 +177,6 @@ export default async function UpdateFlightDetailsCard({ flightId }: UpdateFlight
               </div>
             </section>
 
-            //Notes 
-
             <section>
               <div className="mb-4">
                 <h2 className="text-lg font-semibold">
@@ -201,7 +196,6 @@ export default async function UpdateFlightDetailsCard({ flightId }: UpdateFlight
               />
             </section>
 
-            //Actions 
 
             <div className="flex justify-end gap-3 border-t pt-6">
               <Button

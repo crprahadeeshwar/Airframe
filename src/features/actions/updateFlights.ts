@@ -6,7 +6,7 @@ import { uuidSchema, FlightSchema } from "@/src/schemas/flightSchemas";
 
 
 
-export default async function updateFlight(flightId: string, rawValues: FormData) {
+export async function updateFlight(flightId: string, rawValues: FormData) {
 
     const formValues = {
         flight_number: rawValues.get("flight_number"),
@@ -18,16 +18,13 @@ export default async function updateFlight(flightId: string, rawValues: FormData
         registration: rawValues.get("registration"),
         notes: rawValues.get("notes"),
     };
+    const flightData = FlightSchema.parse(formValues);
+    console.log("DATE FROM FORM:", rawValues.get("date"));
 
     const supabase = await createClient();
 
-    /*
     const{ data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error("Unauthorised!");
-    */
-
-    const flightData = FlightSchema.parse(formValues);
-
 
     const Id = uuidSchema.parse(flightId);
 
@@ -35,7 +32,7 @@ export default async function updateFlight(flightId: string, rawValues: FormData
     .from('flights')
     .update(flightData)
     .eq('id', Id )
-    // .eq('user_id', user.id);
+    .eq('user_id', user.id);
 
     if(error) throw new Error(error.message);
     revalidatePath('/flights');
