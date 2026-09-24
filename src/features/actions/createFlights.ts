@@ -2,12 +2,13 @@
 
 import { createClient } from "@/src/lib/supabase/server";
 import { revalidatePath } from "next/cache";
-import { FlightSchema } from "@/src/schemas/flightSchemas";
+import { FlightSchema, type FormState } from "@/src/schemas/flightSchemas";
 import { redirect } from 'next/navigation';
+import { success } from "zod";
 
 
 
-export async function createFlight(formData: FormData) {
+export async function createFlight(prevState: FormState, formData: FormData) {
 
     const formValues = {
         flight_number: formData.get("flight_number"),
@@ -20,23 +21,29 @@ export async function createFlight(formData: FormData) {
         notes: formData.get("notes"),
     };
 
-    const flightData =  FlightSchema.parse(formValues)
+    const flightData =  FlightSchema.safeParse(formValues)
 
-    const supabase = await createClient();
-    
-    const{ data: { user } } = await supabase.auth.getUser();
-    if (!user) throw new Error("Unauthorised!");
+    if (!flightData.success) {
+        return {
+            errorMessage: flightData.error.issues[0].message
+        }
+    } else {
+        const supabase = await createClient();
+        
+        const{ data: { user } } = await supabase.auth.getUser();
+        if (!user) throw new Error("Unauthorised!");
 
-    const insertData = ({
-        ...flightData,
-        user_id: user.id
-    })
-    const { error } = await supabase
-    .from('flights')
-    .insert(insertData);
+        const insertData = ({
+            ...flightData.data,
+            user_id: user.id
+        })
+        const { error } = await supabase
+        .from('flights')
+        .insert(insertData);
 
-    if(error) throw new Error(error.message);
+        if(error) throw new Error(error.message);
 
-    revalidatePath("/flights");
-    redirect("/flights");
+        revalidatePath("/flights");
+        redirect("/flights");
+    }
 }

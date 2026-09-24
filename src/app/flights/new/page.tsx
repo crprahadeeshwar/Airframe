@@ -5,13 +5,22 @@ import { Calendar } from '@/src/components/ui/calendar';
 import { Button } from '@/src/components/ui/button';
 import { Popover, PopoverTrigger, PopoverContent } from '@/src/components/ui/popover';
 import { createFlight } from '@/src/features/actions/createFlights';
+import Link from 'next/link';
+import { useActionState } from 'react';
+import type { FormState } from '@/src/schemas/flightSchemas';
+import { ErrorAlert } from '@/src/components/ui/error-alert';
 
+const initialState: FormState = {
+  errorMessage: "",
+};
 export default function NewFlightForm() {
 
   const [date, setDate] = React.useState<Date | undefined>(undefined);
+  
+  const [state, formAction, isPending] = useActionState(createFlight, initialState);
 
   return(
-  <form action={createFlight}>
+  <form action={formAction}>
     <div className="mx-auto w-full max-w-3xl p-6">
 
       <div className="mb-8">
@@ -22,8 +31,6 @@ export default function NewFlightForm() {
       </div>
 
       <div className="rounded-2xl border p-6 shadow-sm">
-
-        //Flight Information
 
         <section>
           <h2 className="text-lg font-semibold">
@@ -46,16 +53,13 @@ export default function NewFlightForm() {
               <span className="text-sm font-medium">Date</span>
 
               <Popover>
-                <PopoverTrigger>
-                  <Button
+                <PopoverTrigger
+                  render = {<Button
                     variant="outline"
-                    type="button"
-                    className="justify-start text-left font-normal"
-                  >
+                    className="justify-start text-left font-normal">
                     {date ? date.toLocaleDateString() : "Pick a date"}
-                  </Button>
-                </PopoverTrigger>
-
+                  </Button>}
+                  />
                 <PopoverContent className="w-auto p-0">
                   <Calendar
                     mode="single"
@@ -89,9 +93,6 @@ export default function NewFlightForm() {
           </div>
         </section>
 
-
-        //Aircraft 
-
         <section className="mt-8">
           <h2 className="text-lg font-semibold">
             Aircraft
@@ -109,9 +110,6 @@ export default function NewFlightForm() {
             </label>
           </div>
         </section>
-
-
-        //Route 
 
         <section className="mt-8">
           <h2 className="text-lg font-semibold">
@@ -147,9 +145,6 @@ export default function NewFlightForm() {
           </div>
         </section>
 
-
-        //Notes 
-
         <section className="mt-8">
           <h2 className="text-lg font-semibold">
             Notes
@@ -167,24 +162,24 @@ export default function NewFlightForm() {
             </label>
           </div>
         </section>
-
-
-        //Actions
         
         <div className="mt-8 flex justify-end gap-3 border-t pt-6">
-          <Button
+          <Link href="/flights"><Button
             type="button"
             variant="outline"
           >
             Cancel
           </Button>
+          </Link>
 
-          <Button type="submit">
-            Add Flight
+          <Button type="submit" disabled={isPending}>
+            {isPending ? "Adding..." : "Add Flight"}
           </Button>
         </div>
-
       </div>
+      {state.errorMessage && (
+      <ErrorAlert message={state.errorMessage}/>
+    )}
     </div>
   </form>
 )

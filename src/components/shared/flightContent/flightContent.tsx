@@ -1,7 +1,7 @@
 import FlightHeader from "./flightHeader";
 import FlightTable from "../table/flightTable";
 import { Button } from "../../ui/button";
-
+import Link from "next/link";
 
 export default function FlightContent() {
     return(
@@ -12,7 +12,9 @@ export default function FlightContent() {
                 <p>Keep track of your flights.</p>
             </div>
             <div className="flex items-end justify-end gap-2 p-4 px-6">
-                <Button variant={"secondary"}>Add Flight</Button>
+                <Link href='/flights/new'>
+                    <Button variant={"secondary"}>Add Flight</Button>
+                </Link>
             </div>
             <FlightTable />
         </div>

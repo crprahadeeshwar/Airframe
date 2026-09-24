@@ -14,10 +14,16 @@ const FlightSchema = z.object({
   aircraft_type: z.string().nullable().transform(emptyToNull),
   registration: z.string().nullable().transform(emptyToNull),
   notes: z.string().nullable().transform(emptyToNull),
+}).refine((flightData) => Object.values(flightData).some(value => value !== null), {
+  message: "Atleast one field must be filled out",
 });
 
 const EmailSchema = z.email();
 const PasswordSchema = z.string();
+
+export type FormState = {
+  errorMessage: string;
+}
 
 export {
     uuidSchema, 
