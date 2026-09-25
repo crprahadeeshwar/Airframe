@@ -12,7 +12,9 @@ import { ErrorAlert } from '@/src/components/ui/error-alert';
 
 const initialState: FormState = {
   errorMessage: "",
+  errorType: "none"
 };
+
 export default function NewFlightForm() {
 
   const [date, setDate] = React.useState<Date | undefined>(undefined);
@@ -177,8 +179,13 @@ export default function NewFlightForm() {
           </Button>
         </div>
       </div>
-      {state.errorMessage && (
-      <ErrorAlert message={state.errorMessage}/>
+      {state.errorMessage && state.errorType === "validation" && (
+      <ErrorAlert title="Could Not Add Flight" message={state.errorMessage}/>
+    )}
+    </div>
+    <div>
+      {state.errorMessage && state.errorType === "operation" && (
+      <ErrorAlert title="Oops. Something Went Wrong" message={state.errorMessage}/>
     )}
     </div>
   </form>

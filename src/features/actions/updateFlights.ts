@@ -2,7 +2,7 @@
 
 import { createClient } from "@/src/lib/supabase/server";
 import { revalidatePath } from "next/cache";
-import { uuidSchema, FlightSchema } from "@/src/schemas/flightSchemas";
+import { uuidSchema, FlightInputSchema } from "@/src/schemas/flightSchemas";
 
 
 
@@ -18,7 +18,7 @@ export async function updateFlight(flightId: string, rawValues: FormData) {
         registration: rawValues.get("registration"),
         notes: rawValues.get("notes"),
     };
-    const flightData = FlightSchema.parse(formValues);
+    const flightData = FlightInputSchema.parse(formValues);
     console.log("DATE FROM FORM:", rawValues.get("date"));
 
     const supabase = await createClient();

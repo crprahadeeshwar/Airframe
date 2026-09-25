@@ -6,15 +6,14 @@ import {
 } from "../../ui/card"
 import { updateFlight } from '@/src/features/actions/updateFlights'
 import { fetchFlightsById } from '@/src/features/actions/readFlights'
-import type { UUID, FlightTypeSchema } from '@/src/schemas/flightSchemas'
+import type { UUID, FlightTypeInputSchema } from '@/src/schemas/flightSchemas'
 
 
 interface UpdateFlightDetailsCardProps {
   flightId: UUID
 }
 export default async function UpdateFlightDetailsCard({ flightId }: UpdateFlightDetailsCardProps) {
-  const flightDataRaw: FlightTypeSchema = await fetchFlightsById(flightId);
-
+  const flightDataRaw: FlightTypeInputSchema = await fetchFlightsById(flightId);
   const updateFlightViaForm = updateFlight.bind(null, flightId);
 
   return (

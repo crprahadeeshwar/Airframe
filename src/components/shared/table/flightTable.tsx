@@ -1,27 +1,28 @@
-import { fetchAllFlights } from "@/src/features/actions/readFlights"
-import FlightTableHeader from "./flightTableHeader"
-import FlightTableRow from "./flightTableRow"
+import FlightTableHeader from "./flightTableHeader";
+import FlightTableRow from "./flightTableRow";
+import type { FlightTypeSchema } from "@/src/schemas/flightSchemas";
 
-const flightData = await fetchAllFlights();
+interface FlightTableProps {
+  flightDataArray: FlightTypeSchema[];
+}
 
-export default function FlightTable() {
-  if(flightData){
-    return (
-      <div className="flex flex-col gap-2 px-4 py-2">
-        <FlightTableHeader />
-        <FlightTableRow flights={flightData} />
-        </div>
-  )
-  } else {
-    return(
-      <div>
-        <div className="flex flex-col gap-2 px-4 py-2">
-          <FlightTableHeader />
-        </div>
-        <div>
-          <p> No Data Found </p>
-        </div>
-      </div>
-      )
-  }
+export default function FlightTable({flightDataArray,}: FlightTableProps) {
+
+  return (
+    <div>
+      <FlightTableHeader />
+
+      {flightDataArray.length === 0 ? (
+        <p>No Data Found</p>
+      ) : (
+        <ul>
+          {flightDataArray.map((flight) => (
+            <li key={flight.id}>
+              <FlightTableRow flight={flight} />
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
 }

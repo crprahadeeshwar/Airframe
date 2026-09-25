@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/src/lib/supabase/server";
-import { uuidSchema} from "@/src/schemas/flightSchemas";
+import { uuidSchema, FlightSchema } from "@/src/schemas/flightSchemas";
 
 export async function fetchAllFlights() {
 
@@ -18,11 +18,10 @@ export async function fetchAllFlights() {
     .order('date', {ascending: false});
     
     if (error) throw new Error(error.message);
-    
-    return flightData;
+
+    const flightDataRefined = FlightSchema.array().parse(flightData);    
+    return flightDataRefined;
 };
-
-
 
 export async function fetchFlightsById(flightId: string) {
 
@@ -46,9 +45,28 @@ export async function fetchFlightsById(flightId: string) {
     } 
     return flightData;
 };
- 
 
 
+export async function fetchFlightStats() {
+
+  const supabase = await createClient();
+  
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("Unauthorized!");
+  
+  const userId = uuidSchema.parse(user.id);
+  
+  const { data, error } = await supabase.rpc('get_user_flight_stats', {
+    target_user_id: userId
+  });
+  
+  if (error) {
+    console.error("Error fetching stats:", error.message);
+    throw new Error(error.message);
+  }
+
+  return data; 
+}
 
 
 

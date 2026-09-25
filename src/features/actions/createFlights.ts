@@ -2,14 +2,10 @@
 
 import { createClient } from "@/src/lib/supabase/server";
 import { revalidatePath } from "next/cache";
-import { FlightSchema, type FormState } from "@/src/schemas/flightSchemas";
+import { FlightInputSchema, type FormState } from "@/src/schemas/flightSchemas";
 import { redirect } from 'next/navigation';
-import { success } from "zod";
 
-
-
-export async function createFlight(prevState: FormState, formData: FormData) {
-
+export async function createFlight(prevState: FormState, formData: FormData): Promise<FormState> {
     const formValues = {
         flight_number: formData.get("flight_number"),
         date: formData.get("date"),
@@ -21,11 +17,12 @@ export async function createFlight(prevState: FormState, formData: FormData) {
         notes: formData.get("notes"),
     };
 
-    const flightData =  FlightSchema.safeParse(formValues)
+    const flightData =  FlightInputSchema.safeParse(formValues)
 
     if (!flightData.success) {
         return {
-            errorMessage: flightData.error.issues[0].message
+            errorMessage: flightData.error.issues[0].message,
+            errorType: "validation"
         }
     } else {
         const supabase = await createClient();
@@ -41,8 +38,12 @@ export async function createFlight(prevState: FormState, formData: FormData) {
         .from('flights')
         .insert(insertData);
 
-        if(error) throw new Error(error.message);
-
+        if(error){
+            return{
+                errorMessage: "Please try again",
+                errorType: "operation"
+            }
+        };
         revalidatePath("/flights");
         redirect("/flights");
     }
