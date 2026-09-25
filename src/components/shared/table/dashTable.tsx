@@ -1,13 +1,12 @@
 import FlightTableHeader from "./flightTableHeader";
-import FlightTableRow from "./flightTableRow";
+import DashTableRow from "./dashTableRow";
 import type { FlightTypeSchema } from "@/src/schemas/flightSchemas";
 
-interface FlightTableProps {
+interface DashTableProps {
     flightDataArray: FlightTypeSchema[];
-    onFlightSelect: (flight: FlightTypeSchema) => void;
 }
 
-export default function FlightTable({flightDataArray, onFlightSelect}: FlightTableProps) {
+export default function DashTable({flightDataArray,}: DashTableProps) {
 
   return (
     <div>
@@ -21,7 +20,7 @@ export default function FlightTable({flightDataArray, onFlightSelect}: FlightTab
         <ul>
           {flightDataArray.map((flight) => (
             <li key={flight.id}>
-              <FlightTableRow flight={flight} onFlightSelect={onFlightSelect}/>
+              <DashTableRow flight={flight} />
             </li>
           ))}
         </ul>

@@ -1,14 +1,25 @@
+'use client';
+
 import FlightHeader from "./flightHeader";
 import FlightTable from "../table/flightTable";
 import { Button } from "../../ui/button";
 import Link from "next/link";
 import type { FlightTypeSchema } from "@/src/schemas/flightSchemas";
+import { useState } from "react";
+import FlightDetailsCard from "./flightDetailsCard";
 
 interface FlightContentProps {
     flightDataArrayProps: FlightTypeSchema[]
 }
 
-export default async function FlightContent({flightDataArrayProps,}: FlightContentProps) {
+export default function FlightContent({flightDataArrayProps,}: FlightContentProps) {
+
+    const [selectedFlight, setSelectedFlight] = useState<FlightTypeSchema | null>(null);
+
+    const handleOnClick = (flight: FlightTypeSchema) => {
+        setSelectedFlight(flight)
+    }
+
     return (
         <div>
             <FlightHeader />
@@ -24,7 +35,14 @@ export default async function FlightContent({flightDataArrayProps,}: FlightConte
                 </Link>
             </div>
 
-            <FlightTable flightDataArray={flightDataArrayProps} />
+            <FlightTable flightDataArray={flightDataArrayProps} onFlightSelect={handleOnClick} />
+            
+            {selectedFlight!== null && 
+            <FlightDetailsCard 
+                flightData={selectedFlight} 
+                flightId={selectedFlight.id}
+            />}
         </div>
     );
 }
+

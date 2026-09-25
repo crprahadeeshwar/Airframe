@@ -1,13 +1,12 @@
 import type { FlightTypeSchema } from "@/src/schemas/flightSchemas";
 
-interface FlightTableRowProps {
+interface DashTableRowProps {
   flight: FlightTypeSchema;
-  onFlightSelect: (flight: FlightTypeSchema) => void;
 }
 
-export default function FlightTableRow({ flight, onFlightSelect }: FlightTableRowProps ) {
+export default function DashTableRow({ flight,}: DashTableRowProps ) {
   return (
-    <div className="grid grid-cols-6 gap-4 py-2 text-sm sm:grid-cols-8" onClick={() => onFlightSelect(flight)}>
+    <div className="grid grid-cols-6 gap-4 py-2 text-sm sm:grid-cols-8">
       <span>
         {flight.date ? flight.date.toISOString().split("T")[0] : ""}
       </span>

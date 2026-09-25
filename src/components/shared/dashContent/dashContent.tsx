@@ -1,12 +1,12 @@
 import DashHeader from "./dashHeader"
 import FlightCard from "./flightCards"
-import FlightTable from "../table/flightTable"
+import DashTable from "../table/dashTable";
 import { fetchAllFlights, fetchFlightStats } from "@/src/features/actions/readFlights"
 
 export default async function DashboardContent() {
   const flightDataArray = await fetchAllFlights();
   const flightStats = await fetchFlightStats();
-  
+
   return (
     <div>
       <DashHeader />
@@ -28,7 +28,7 @@ export default async function DashboardContent() {
         />
       </div>
 
-      <FlightTable flightDataArray={flightDataArray} />
+      <DashTable flightDataArray={flightDataArray}  />
     </div>
   );
 }

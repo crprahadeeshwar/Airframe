@@ -15,7 +15,7 @@ interface FlightDetailsCardProps {
   flightId: UUID;
 }
 
-export default async function FlightDetailsCard({ flightData, flightId } : FlightDetailsCardProps) {
+export default function FlightDetailsCard({ flightData, flightId } : FlightDetailsCardProps) {
   return (
     <Card className="m-4 w-full max-w-2xl">
       
