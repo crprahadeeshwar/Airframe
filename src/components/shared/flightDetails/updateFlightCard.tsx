@@ -5,18 +5,33 @@ import {
   CardHeader,
 } from "../../ui/card"
 import { updateFlight } from '@/src/features/actions/updateFlights'
-import { fetchFlightsById } from '@/src/features/actions/readFlights'
-import type { UUID, FlightTypeInputSchema } from '@/src/schemas/flightSchemas'
-
+import type { FlightTypeSchema } from '@/src/schemas/flightSchemas'
+import { useActionState, useEffect } from "react"
+import type { UpdateState } from "@/src/features/actions/updateFlights"
+import { ErrorAlert } from "../../ui/error-alert"
 
 interface UpdateFlightDetailsCardProps {
-  flightId: UUID
+  flight: FlightTypeSchema;
+  onClose: () => void;
 }
-export default async function UpdateFlightDetailsCard({ flightId }: UpdateFlightDetailsCardProps) {
-  const flightDataRaw: FlightTypeInputSchema = await fetchFlightsById(flightId);
-  const updateFlightViaForm = updateFlight.bind(null, flightId);
+export default function UpdateFlightDetailsCard({ flight, onClose }: UpdateFlightDetailsCardProps) {
+  const updateFlightViaForm = updateFlight.bind(null, flight.id);
+
+  const initialState: UpdateState = {
+    status: 'idle',
+    message: ''
+  };
+
+  const [state, formAction, isPending] = useActionState(updateFlightViaForm, initialState);
+
+  useEffect(() => {
+    if (state.status === 'success') {
+      onClose();
+    }
+  }, [state.status, onClose]);
 
   return (
+    <div>
     <Card className="mx-auto w-full max-w-3xl">
       <CardHeader>
         <div>
@@ -28,7 +43,7 @@ export default async function UpdateFlightDetailsCard({ flightId }: UpdateFlight
       </CardHeader>
 
       <CardContent>
-        <form action={updateFlightViaForm}>
+        <form action={formAction}>
           <div className="space-y-8">
 
             
@@ -52,7 +67,7 @@ export default async function UpdateFlightDetailsCard({ flightId }: UpdateFlight
                   <input
                     type="text"
                     name="flight_number"
-                    defaultValue={flightDataRaw?.flight_number ?? ""}
+                    defaultValue={flight?.flight_number ?? ""}
                     placeholder="EK525"
                     className="rounded-md border bg-background px-3 py-2"
                   />
@@ -66,7 +81,7 @@ export default async function UpdateFlightDetailsCard({ flightId }: UpdateFlight
                   <input
                     type="date"
                     name="date"
-                    defaultValue={flightDataRaw?.date ? flightDataRaw.date.toISOString().split("T")[0] : ""}                    
+                    defaultValue={flight?.date ? flight.date.toISOString().split("T")[0] : ""}                    
                     className="rounded-md border bg-background px-3 py-2"
                   />
                 </label>
@@ -79,7 +94,7 @@ export default async function UpdateFlightDetailsCard({ flightId }: UpdateFlight
                   <input
                     type="text"
                     name="airline"
-                    defaultValue={flightDataRaw?.airline ?? ""}
+                    defaultValue={flight?.airline ?? ""}
                     placeholder="Emirates"
                     className="rounded-md border bg-background px-3 py-2"
                   />
@@ -93,7 +108,7 @@ export default async function UpdateFlightDetailsCard({ flightId }: UpdateFlight
                   <input
                     type="text"
                     name="aircraft_type"
-                    defaultValue={flightDataRaw?.aircraft_type ?? ""}
+                    defaultValue={flight?.aircraft_type ?? ""}
                     placeholder="B777-300ER"
                     className="rounded-md border bg-background px-3 py-2"
                   />
@@ -121,7 +136,7 @@ export default async function UpdateFlightDetailsCard({ flightId }: UpdateFlight
                 <input
                   type="text"
                   name="registration"
-                  defaultValue={flightDataRaw?.registration ?? ""}
+                  defaultValue={flight?.registration ?? ""}
                   placeholder="A6-EQH"
                   className="rounded-md border bg-background px-3 py-2"
                 />
@@ -149,7 +164,7 @@ export default async function UpdateFlightDetailsCard({ flightId }: UpdateFlight
                   <input
                     type="text"
                     name="departure"
-                    defaultValue={flightDataRaw?.departure ?? ""}
+                    defaultValue={flight?.departure ?? ""}
                     placeholder="HYD"
                     className="rounded-md border bg-background px-3 py-2 uppercase"
                   />
@@ -167,7 +182,7 @@ export default async function UpdateFlightDetailsCard({ flightId }: UpdateFlight
                   <input
                     type="text"
                     name="arrival"
-                    defaultValue={flightDataRaw?.arrival ?? ""}
+                    defaultValue={flight?.arrival ?? ""}
                     placeholder="DXB"
                     className="rounded-md border bg-background px-3 py-2 uppercase"
                   />
@@ -188,7 +203,7 @@ export default async function UpdateFlightDetailsCard({ flightId }: UpdateFlight
 
               <textarea
                 name="notes"
-                defaultValue={flightDataRaw?.notes ?? ""}
+                defaultValue={flight.notes ?? ""}
                 placeholder="Anything worth remembering..."
                 rows={5}
                 className="w-full resize-none rounded-md border bg-background px-3 py-2"
@@ -200,18 +215,25 @@ export default async function UpdateFlightDetailsCard({ flightId }: UpdateFlight
               <Button
                 type="button"
                 variant="outline"
+                onClick={onClose}
               >
                 Cancel
               </Button>
 
-              <Button type="submit">
-                Save Changes
+              <Button type="submit" disabled={isPending}>
+                {isPending ? 'Saving...' : 'Save Changes'}
               </Button>
             </div>
 
           </div>
         </form>
-      </CardContent>
+        {state.status === 'error' && (
+      <ErrorAlert title='An Error Occured.' message={state.message}/>
+        )
+        }
+      </CardContent>  
     </Card>
+    
+    </div>
   );
 }

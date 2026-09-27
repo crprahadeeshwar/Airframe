@@ -7,25 +7,41 @@ import {
   CardTitle,
 } from "../../ui/card"
 import { AlertDialogDestructive } from "../../ui/destructive-alert"
-import { ArrowRight } from "lucide-react"
+import { X, ArrowRight } from "lucide-react";
 import type { FlightTypeSchema, UUID } from "@/src/schemas/flightSchemas"
+import { useActionState } from "react";
+import type { DeleteState } from "@/src/features/actions/deleteFlights";
 
 interface FlightDetailsCardProps {
   flightData: FlightTypeSchema;
   flightId: UUID;
+  onClose: () => void;
+  openEdit: (state: boolean) => void;
 }
 
-export default function FlightDetailsCard({ flightData, flightId } : FlightDetailsCardProps) {
+export default function FlightDetailsCard({ flightData, flightId, onClose, openEdit } : FlightDetailsCardProps) {
+
   return (
     <Card className="m-4 w-full max-w-2xl">
       
-      <CardHeader className="items-center text-center border-b">
-        <CardTitle className="text-2xl">
+      <CardHeader className="relative border-b">
+        <CardTitle className="text-center text-2xl">
           {flightData.registration}
         </CardTitle>
-        <p className="text-sm text-muted-foreground">
-          Flight Registration
-        </p>
+
+            <p className="text-center text-sm text-muted-foreground">
+              Flight Registration
+            </p>
+
+        <Button
+          variant="ghost"
+          size="icon"
+          className="absolute right-2 top-2"
+          onClick={onClose}
+          aria-label="Close flight details">
+          <X />
+        </Button>
+
       </CardHeader>
 
       <CardContent className="space-y-8 pt-6">
@@ -67,7 +83,7 @@ export default function FlightDetailsCard({ flightData, flightId } : FlightDetai
 
         <div className="text-center">
           <p className="text-sm text-muted-foreground">Date</p>
-          <p className="mt-1 font-medium">// Date</p>
+          <p className="mt-1 font-medium">{flightData?.date ? flightData.date.toISOString().split("T")[0] : ""}</p>
         </div>
 
 
@@ -81,13 +97,14 @@ export default function FlightDetailsCard({ flightData, flightId } : FlightDetai
       </CardContent>
 
       <CardFooter className="flex justify-between border-t">
-        <Button variant="outline">
+        <Button variant="outline" onClick={() => openEdit(true)}>
           Edit
         </Button>
 
-        <AlertDialogDestructive flightId = {flightId}/>
+        <AlertDialogDestructive flightId = {flightData.id} onDeleteSuccess={onClose}  />
       </CardFooter>
 
     </Card>
+
   )
 }
