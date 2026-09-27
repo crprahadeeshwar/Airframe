@@ -9,12 +9,14 @@ import type { FlightTypeSchema } from '@/src/schemas/flightSchemas'
 import { useActionState, useEffect } from "react"
 import type { UpdateState } from "@/src/features/actions/updateFlights"
 import { ErrorAlert } from "../../ui/error-alert"
+import { toast } from "../../ui/toast"
 
 interface UpdateFlightDetailsCardProps {
   flight: FlightTypeSchema;
   onClose: () => void;
+  onSuccess: () => void;
 }
-export default function UpdateFlightDetailsCard({ flight, onClose }: UpdateFlightDetailsCardProps) {
+export default function UpdateFlightDetailsCard({ flight, onClose, onSuccess }: UpdateFlightDetailsCardProps) {
   const updateFlightViaForm = updateFlight.bind(null, flight.id);
 
   const initialState: UpdateState = {
@@ -26,7 +28,18 @@ export default function UpdateFlightDetailsCard({ flight, onClose }: UpdateFligh
 
   useEffect(() => {
     if (state.status === 'success') {
-      onClose();
+      onSuccess();
+      toast.add({
+            type: "success",
+            description: "Flight has been updated.",
+          })
+    }
+    if (state.status === 'error') {
+      toast.add({
+            type: "error",
+            description: "Flight could not be updated",
+            priority: "high"
+          })
     }
   }, [state.status, onClose]);
 
@@ -212,15 +225,11 @@ export default function UpdateFlightDetailsCard({ flight, onClose }: UpdateFligh
 
 
             <div className="flex justify-end gap-3 border-t pt-6">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={onClose}
-              >
+              <Button type="button" variant="outline" onClick={onClose}>
                 Cancel
               </Button>
 
-              <Button type="submit" disabled={isPending}>
+              <Button type="submit" disabled={isPending} >
                 {isPending ? 'Saving...' : 'Save Changes'}
               </Button>
             </div>

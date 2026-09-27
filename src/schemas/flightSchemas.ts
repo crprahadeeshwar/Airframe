@@ -8,7 +8,7 @@ const emptyToNull = (val: string | null) =>
 const FlightInputSchema = z.object({
   flight_number: z.string().nullable().transform(emptyToNull),
   date: z.preprocess((value) => value === "" ? null : value, z.coerce.date().nullable()),
-  departure: z.string().nullable().transform(emptyToNull),
+  departure: z.string().max(20, { message: "Cannot exceed 20 characters." }).nullable().transform(emptyToNull),
   arrival: z.string().nullable().transform(emptyToNull),
   airline: z.string().nullable().transform(emptyToNull),
   aircraft_type: z.string().nullable().transform(emptyToNull),
@@ -34,6 +34,7 @@ const EmailSchema = z.email();
 const PasswordSchema = z.string();
 
 export type FormState = {
+  status: 'idle' | 'success' | 'error'
   errorMessage: string;
   errorType: "validation" | "operation" | "none";
 }

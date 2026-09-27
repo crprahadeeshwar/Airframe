@@ -1,85 +1,105 @@
-'use client';
+"use client";
 
 import FlightHeader from "./flightHeader";
 import FlightTable from "../table/flightTable";
 import { Button } from "../../ui/button";
 import Link from "next/link";
 import type { FlightTypeSchema } from "@/src/schemas/flightSchemas";
-import { useState, useActionState } from "react";
+import { useState } from "react";
 import FlightDetailsCard from "./flightDetailsCard";
 import UpdateFlightDetailsCard from "./updateFlightCard";
-import { updateFlight } from "@/src/features/actions/updateFlights";
 
 interface FlightContentProps {
-    flightDataArrayProps: FlightTypeSchema[]
+  flightDataArrayProps: FlightTypeSchema[];
 }
 
-export default function FlightContent({flightDataArrayProps,}: FlightContentProps) {
+export default function FlightContent({
+  flightDataArrayProps,
+}: FlightContentProps) {
+  const [selectedFlight, setSelectedFlight] =
+    useState<FlightTypeSchema | null>(null);
 
-    const [selectedFlight, setSelectedFlight] = useState<FlightTypeSchema | null>(null);
-    const [isEdit, setIsEdit] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
 
-    const handleOnClick = (flight: FlightTypeSchema) => {
-        setSelectedFlight(flight)
-    };
-    const handleDetailsClose = () => {
-        setSelectedFlight(null)
-    }
-    const handleEditOpen = (isOpen: boolean) => {
-        setIsEdit(isOpen);
-    }
-    const handleEditClose = () => {
-        setIsEdit(false);
-    }
-    const handleEditSuccess = () => {
-        setIsEdit(false);
-        setSelectedFlight(null);
-    }
+  const handleOnClick = (flight: FlightTypeSchema) => {
+    setSelectedFlight(flight);
+  };
 
-    return (
-        <div>
-            <FlightHeader />
+  const handleDetailsClose = () => {
+    setSelectedFlight(null);
+  };
 
-            <div className="flex flex-col items-left gap-2 p-4">
-                <h1 className="text-2xl">Flights</h1>
-                <p>Keep track of your flights.</p>
-            </div>
+  const handleEditOpen = (isOpen: boolean) => {
+    setIsEdit(isOpen);
+  };
 
-            <div className="flex items-end justify-end gap-2 p-4 px-6">
-                <Link href="/flights/new">
-                    <Button variant="secondary">Add Flight</Button>
-                </Link>
-            </div>
+  const handleEditClose = () => {
+    setIsEdit(false);
+  };
 
-            <FlightTable flightDataArray={flightDataArrayProps} onFlightSelect={handleOnClick} />
+  const handleEditSuccess = () => {
+    setIsEdit(false);
+    setSelectedFlight(null);
+  };
 
-            {selectedFlight !== null && !isEdit && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-                onClick={handleDetailsClose}
-                >
-                <div onClick={(event) => event.stopPropagation()}>
-                <FlightDetailsCard
-                    flightData={selectedFlight}
-                    flightId={selectedFlight.id}
-                    onClose={handleDetailsClose}
-                    openEdit={handleEditOpen}
-                />
-                </div>
-            </div>
-            )}
-            {selectedFlight !== null && isEdit && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-                onClick={handleEditClose}
-                >
-                <div onClick={(event) => event.stopPropagation()}>
-                <UpdateFlightDetailsCard
-                flight={selectedFlight}
-                onClose={handleEditClose}
-                />
-                </div>
-            </div>
-            )}
+  return (
+    <div className="flex min-h-full flex-col">
+      <FlightHeader />
+
+      <main className="flex-1 space-y-6 p-6">
+
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h1 className="text-2xl font-semibold tracking-tight">
+              Flights
+            </h1>
+
+            <p className="mt-1 text-sm text-muted-foreground">
+              Keep track of your flights and travel history.
+            </p>
+          </div>
+
+            <Link href="/flights/new">
+              <Button type="button" variant='default'>Add Flight</Button>
+            </Link>
+
         </div>
-    );
-}
+        <FlightTable
+          flightDataArray={flightDataArrayProps}
+          onFlightSelect={handleOnClick}
+        />
+      </main>
 
+      {selectedFlight !== null && !isEdit && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
+          onClick={handleDetailsClose}
+        >
+          <div onClick={(event) => event.stopPropagation()}>
+            <FlightDetailsCard
+              flightData={selectedFlight}
+              flightId={selectedFlight.id}
+              onClose={handleDetailsClose}
+              openEdit={handleEditOpen}
+            />
+          </div>
+        </div>
+      )}
+
+      {selectedFlight !== null && isEdit && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
+          onClick={handleEditClose}
+        >
+          <div onClick={(event) => event.stopPropagation()}>
+            <UpdateFlightDetailsCard
+              flight={selectedFlight}
+              onClose={handleEditClose}
+              onSuccess={handleEditSuccess}
+            />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

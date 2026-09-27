@@ -1,16 +1,9 @@
-import { buttonVariants } from "../../ui/button"
 export default function FlightHeader() {
-    return(
-        <div className="flex justify-between border-b p-4">
-            <span>Flights</span>
-            <span>
-                <a
-                href="https://github.com/crprahadeeshwar/Airframe" target="_blank" rel="noopener"
-                className={buttonVariants({ variant: "secondary", size: "sm" })}
-                >
-                Github
-                </a>
-            </span>
-        </div>
-    )
+  return (
+    <header className="flex h-14 items-center border-b px-6">
+      <span className="text-sm font-medium text-muted-foreground">
+        Flights
+      </span>
+    </header>
+  );
 }

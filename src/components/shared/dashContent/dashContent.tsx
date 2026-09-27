@@ -1,34 +1,32 @@
-import DashHeader from "./dashHeader"
-import FlightCard from "./flightCards"
-import DashTable from "../table/dashTable";
-import { fetchAllFlights, fetchFlightStats } from "@/src/features/actions/readFlights"
-
-export default async function DashboardContent() {
-  const flightDataArray = await fetchAllFlights();
-  const flightStats = await fetchFlightStats();
-
+import DashHeader from "./dashHeader";
+import DashoardMetrics from "./dashMetrics";
+import DashboardTable from "./dashTable";
+import { DashboardMetricsSkeleton, DashboardTableSkeleton } from "../../skeletons/dashboardSkeletons";
+import { Suspense } from "react";
+export default function DashboardContent() {
   return (
-    <div>
+    <div className="flex min-h-full flex-col">
       <DashHeader />
 
-      <div className="flex flex-row gap-4">
-        <FlightCard
-          title="Flights"
-          metric={flightStats?.flight_count ?? "N/A"}
-        />
+      <main className="flex-1 space-y-6 p-6">
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight">
+            Dashboard
+          </h1>
 
-        <FlightCard
-          title="Aircraft"
-          metric={flightStats?.aircaft_count ?? 0}
-        />
+          <p className="mt-1 text-sm text-muted-foreground">
+            Your flight history at a glance.
+          </p>
+        </div>
 
-        <FlightCard
-          title="Airlines"
-          metric={flightStats?.airline_count ?? "N/A"}
-        />
-      </div>
+        <Suspense fallback={<DashboardMetricsSkeleton />}>
+          <DashoardMetrics />
+        </Suspense>
 
-      <DashTable flightDataArray={flightDataArray}  />
+        <Suspense fallback={<DashboardTableSkeleton />}>
+          <DashboardTable />
+        </Suspense>
+      </main>
     </div>
   );
 }

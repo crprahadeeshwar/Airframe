@@ -37,7 +37,7 @@ export async function updateFlight(flightId: string, prevState: UpdateState,  ra
 
     const { error } = await supabase
     .from('flights')
-    .update(flightData)
+    .update(flightData.data)
     .eq('id', Id )
     .eq('user_id', user.id);
 

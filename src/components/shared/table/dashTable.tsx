@@ -3,29 +3,48 @@ import DashTableRow from "./dashTableRow";
 import type { FlightTypeSchema } from "@/src/schemas/flightSchemas";
 
 interface DashTableProps {
-    flightDataArray: FlightTypeSchema[];
+  flightDataArray: FlightTypeSchema[];
 }
 
-export default function DashTable({flightDataArray,}: DashTableProps) {
-
+export default function DashTable({
+  flightDataArray,
+}: DashTableProps) {
   return (
-    <div>
-    <div>
+    <section className="overflow-hidden rounded-xl border bg-background shadow-sm">
+      <div className="border-b px-4 py-4">
+        <h2 className="text-sm font-semibold">
+          Recent Flights
+        </h2>
+
+        <p className="mt-1 text-sm text-muted-foreground">
+          Your latest recorded flights.
+        </p>
+      </div>
+
       <FlightTableHeader />
-    </div>
-    <div>
+
       {flightDataArray.length === 0 ? (
-        <p>No Data Found</p>
+        <div className="flex min-h-48 items-center justify-center px-6">
+          <div className="text-center">
+            <p className="text-sm font-medium">
+              No flights yet
+            </p>
+
+            <p className="mt-1 text-sm text-muted-foreground">
+              Add your first flight to start building your travel history.
+            </p>
+          </div>
+        </div>
       ) : (
-        <ul>
+        <div>
           {flightDataArray.map((flight) => (
-            <li key={flight.id}>
-              <DashTableRow flight={flight} />
-            </li>
+            <DashTableRow
+              key={flight.id}
+              flight={flight}
+            />
           ))}
-        </ul>
+        </div>
       )}
-    </div>
-    </div>
+    </section>
   );
 }

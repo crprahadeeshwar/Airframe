@@ -18,7 +18,7 @@ import { Button } from "./button"
 import type { UUID } from "@/src/schemas/flightSchemas"
 import { deleteFlightById, type DeleteState } from "@/src/features/actions/deleteFlights"
 import { useState, useActionState, useEffect } from "react";
-import { boolean } from "zod";
+import { toast } from "./toast";
 
 interface AlertDialogDestructiveProp {
   flightId: UUID;
@@ -41,8 +41,22 @@ export function AlertDialogDestructive( { flightId, onDeleteSuccess } : AlertDia
     if (state.status === 'success') {
       setOpen(false)
       onDeleteSuccess()
+      toast.add({
+            type: "success",
+            description: "Flight has been deleted",
+          })
+    }
+    if (state.status === 'error') {
+      setOpen(false)
+      toast.add({
+            type: "error",
+            description: "Flight could not be deleted",
+            priority: "high"
+          })
     }
   }, [state.status, onDeleteSuccess]);
+
+
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
@@ -73,3 +87,6 @@ export function AlertDialogDestructive( { flightId, onDeleteSuccess } : AlertDia
     </AlertDialog>
   ) 
 }
+
+
+

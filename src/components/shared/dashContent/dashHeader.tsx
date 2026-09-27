@@ -1,12 +1,9 @@
-export default function dashHeader() {
-    return(
-        <div className="flex justify-between border-b p-4">
-            <span>Dashboard</span>
-            <span>
-                <a href="github.com" target="_blank" rel="noopener noreferrer">
-                    Github
-                </a>
-            </span>
-        </div>
-    )
+export default function DashHeader() {
+  return (
+    <header className="flex h-14 items-center border-b px-6">
+      <span className="text-sm font-medium text-muted-foreground">
+        Dashboard
+      </span>
+    </header>
+  );
 }

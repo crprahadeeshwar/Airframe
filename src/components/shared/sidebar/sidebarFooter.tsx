@@ -1,10 +1,9 @@
 import { LogoutButton } from "../../auth/logoutButton"
 
 export default function SidebarFooter() {
-
-    return(
-        <div className="text-sm text-gray-500">
-            <LogoutButton/>
-        </div>
-    )
+  return (
+    <div className="border-t p-3">
+      <LogoutButton />
+    </div>
+  )
 }

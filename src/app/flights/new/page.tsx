@@ -1,25 +1,49 @@
 'use client'
 
-import React from 'react';
+import React, { useEffect, useActionState } from 'react';
 import { Calendar } from '@/src/components/ui/calendar';
 import { Button } from '@/src/components/ui/button';
 import { Popover, PopoverTrigger, PopoverContent } from '@/src/components/ui/popover';
 import { createFlight } from '@/src/features/actions/createFlights';
 import Link from 'next/link';
-import { useActionState } from 'react';
 import type { FormState } from '@/src/schemas/flightSchemas';
 import { ErrorAlert } from '@/src/components/ui/error-alert';
+import { toast } from '@/src/components/ui/toast';
+import { useRouter } from 'next/navigation';
 
 const initialState: FormState = {
+  status: 'idle',
   errorMessage: "",
   errorType: "none"
 };
 
 export default function NewFlightForm() {
 
+  const router = useRouter();
+
   const [date, setDate] = React.useState<Date | undefined>(undefined);
   
   const [state, formAction, isPending] = useActionState(createFlight, initialState);
+
+  useEffect (() => {
+    console.log('EFFECT RAN:', state.status);
+    if(state.status === 'error') {
+      console.log('ERROR BRANCH')
+      toast.add({
+            type: "error",
+            description: "Flight could not be created.",
+            priority: "high",
+    })}
+
+    if(state.status === 'success') {
+      console.log('SUCCESS BRANCH');
+      toast.add({
+            type: "success",
+            description: "Flight has been created.",
+          });
+      router.push('/flights');
+      }
+  }, [state.status, router])
 
   return(
   <form action={formAction}>

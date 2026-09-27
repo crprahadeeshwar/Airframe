@@ -3,7 +3,6 @@
 import { createClient } from "@/src/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { FlightInputSchema, type FormState } from "@/src/schemas/flightSchemas";
-import { redirect } from 'next/navigation';
 
 export async function createFlight(prevState: FormState, formData: FormData): Promise<FormState> {
     const formValues = {
@@ -21,6 +20,7 @@ export async function createFlight(prevState: FormState, formData: FormData): Pr
 
     if (!flightData.success) {
         return {
+            status: 'error',
             errorMessage: flightData.error.issues[0].message,
             errorType: "validation"
         }
@@ -40,11 +40,16 @@ export async function createFlight(prevState: FormState, formData: FormData): Pr
 
         if(error){
             return{
+                status: 'error',
                 errorMessage: "Please try again",
                 errorType: "operation"
             }
         };
         revalidatePath("/flights");
-        redirect("/flights");
+        return {
+            status: 'success',
+            errorMessage: "No error",
+            errorType: 'none'
+        }
     }
 }
