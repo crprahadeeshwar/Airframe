@@ -1,24 +1,35 @@
 import FlightTableHeader from "./flightTableHeader";
-import FlightTableRow from "./flightTableRow";
+import DashTableRow from "./dashTableRow";
 import type { FlightTypeSchema } from "@/src/schemas/flightSchemas";
 
-interface FlightTableProps {
+interface DashTableProps {
   flightDataArray: FlightTypeSchema[];
-  onFlightSelect: (flight: FlightTypeSchema) => void;
 }
 
-export default function FlightTable({
+export default function DashTable({
   flightDataArray,
-  onFlightSelect,
-}: FlightTableProps) {
+}: DashTableProps) {
   return (
     <section className="overflow-hidden rounded-xl border bg-background shadow-sm">
+      <div className="border-b px-4 py-4">
+        <h2 className="text-sm font-semibold">
+          Recent Flights
+        </h2>
+
+        <p className="mt-1 text-sm text-muted-foreground">
+          Your latest recorded flights.
+        </p>
+      </div>
+
       <FlightTableHeader />
 
       {flightDataArray.length === 0 ? (
         <div className="flex min-h-48 items-center justify-center px-6">
           <div className="text-center">
-            <p className="text-sm font-medium">No flights yet</p>
+            <p className="text-sm font-medium">
+              No flights yet
+            </p>
+
             <p className="mt-1 text-sm text-muted-foreground">
               Add your first flight to start building your travel history.
             </p>
@@ -27,10 +38,9 @@ export default function FlightTable({
       ) : (
         <div>
           {flightDataArray.map((flight) => (
-            <FlightTableRow
+            <DashTableRow
               key={flight.id}
               flight={flight}
-              onFlightSelect={onFlightSelect}
             />
           ))}
         </div>

@@ -7,30 +7,41 @@ import {
   CardTitle,
 } from "../../ui/card"
 import { AlertDialogDestructive } from "../../ui/destructive-alert"
-import { ArrowRight, Plane } from "lucide-react"
-import { fetchFlightsById } from "@/src/features/actions/readFlights"
+import { X, ArrowRight } from "lucide-react";
 import type { FlightTypeSchema, UUID } from "@/src/schemas/flightSchemas"
+import { useActionState } from "react";
+import type { DeleteState } from "@/src/features/actions/deleteFlights";
 
 interface FlightDetailsCardProps {
+  flightData: FlightTypeSchema;
   flightId: UUID;
+  onClose: () => void;
+  openEdit: (state: boolean) => void;
 }
 
-export default async function FlightDetailsCard({ flightId } : FlightDetailsCardProps) {
-
-  let rawDetails = await fetchFlightsById(flightId);
-
-  const flightDetails: FlightTypeSchema =  rawDetails;
+export default function FlightDetailsCard({ flightData, flightId, onClose, openEdit } : FlightDetailsCardProps) {
 
   return (
     <Card className="m-4 w-full max-w-2xl">
       
-      <CardHeader className="items-center text-center border-b">
-        <CardTitle className="text-2xl">
-          {flightDetails.registration}
+      <CardHeader className="relative border-b">
+        <CardTitle className="text-center text-2xl">
+          {flightData.registration}
         </CardTitle>
-        <p className="text-sm text-muted-foreground">
-          Flight Registration
-        </p>
+
+            <p className="text-center text-sm text-muted-foreground">
+              Flight Registration
+            </p>
+
+        <Button
+          variant="ghost"
+          size="icon"
+          className="absolute right-2 top-2"
+          onClick={onClose}
+          aria-label="Close flight details">
+          <X />
+        </Button>
+
       </CardHeader>
 
       <CardContent className="space-y-8 pt-6">
@@ -39,17 +50,17 @@ export default async function FlightDetailsCard({ flightId } : FlightDetailsCard
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <div className="rounded-xl border p-4 text-center">
             <p className="text-sm text-muted-foreground">Aircraft</p>
-            <p className="mt-1 font-medium">{flightDetails.aircraft_type}</p>
+            <p className="mt-1 font-medium">{flightData.aircraft_type}</p>
           </div>
 
           <div className="rounded-xl border p-4 text-center">
             <p className="text-sm text-muted-foreground">Flight No.</p>
-            <p className="mt-1 font-medium">{flightDetails.flight_number}</p>
+            <p className="mt-1 font-medium">{flightData.flight_number}</p>
           </div>
 
           <div className="rounded-xl border p-4 text-center">
             <p className="text-sm text-muted-foreground">Airline</p>
-            <p className="mt-1 font-medium">{flightDetails.airline}</p>
+            <p className="mt-1 font-medium">{flightData.airline}</p>
           </div>
         </div>
 
@@ -57,14 +68,14 @@ export default async function FlightDetailsCard({ flightId } : FlightDetailsCard
         <div className="flex items-center justify-between gap-4">
           <div className="flex-1 rounded-xl border p-4 text-center">
             <p className="text-sm text-muted-foreground">From</p>
-            <p className="mt-1 text-2xl font-semibold">{flightDetails.departure}</p>
+            <p className="mt-1 text-2xl font-semibold">{flightData.departure}</p>
           </div>
 
           <ArrowRight className="shrink-0 text-muted-foreground" />
 
           <div className="flex-1 rounded-xl border p-4 text-center">
             <p className="text-sm text-muted-foreground">To</p>
-            <p className="mt-1 text-2xl font-semibold">{flightDetails.arrival}</p>
+            <p className="mt-1 text-2xl font-semibold">{flightData.arrival}</p>
           </div>
         </div>
 
@@ -72,28 +83,28 @@ export default async function FlightDetailsCard({ flightId } : FlightDetailsCard
 
         <div className="text-center">
           <p className="text-sm text-muted-foreground">Date</p>
-          <p className="mt-1 font-medium">// Date</p>
+          <p className="mt-1 font-medium">{flightData?.date ? flightData.date.toISOString().split("T")[0] : ""}</p>
         </div>
 
 
         <div className="rounded-xl border p-4">
           <p className="text-sm text-muted-foreground">Notes</p>
           <p className="mt-2">
-            {flightDetails.notes}
+            {flightData.notes}
           </p>
         </div>
 
       </CardContent>
 
-      
       <CardFooter className="flex justify-between border-t">
-        <Button variant="outline">
+        <Button variant="outline" onClick={() => openEdit(true)}>
           Edit
         </Button>
 
-        <AlertDialogDestructive flightId = {flightId}/>
+        <AlertDialogDestructive flightId = {flightData.id} onDeleteSuccess={onClose}  />
       </CardFooter>
 
     </Card>
+
   )
 }

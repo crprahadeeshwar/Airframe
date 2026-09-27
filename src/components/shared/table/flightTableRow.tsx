@@ -1,31 +1,45 @@
-'use client'
+import type { FlightTypeSchema } from "@/src/schemas/flightSchemas";
 
-interface FlightTableProps {
-    flights: {
-        date: string,
-        flight_number: string,
-        aircraft_type: string,
-        departure: string,
-        arrival: string,
-        airline: string
-    }[]
+interface FlightTableRowProps {
+  flight: FlightTypeSchema;
+  onFlightSelect: (flight: FlightTypeSchema) => void;
 }
 
-export default function FlightTableRow( {flights}: FlightTableProps) {
+export default function FlightTableRow({
+  flight,
+  onFlightSelect,
+}: FlightTableRowProps) {
+  return (
+    <button
+      type="button"
+      onClick={() => onFlightSelect(flight)}
+      className="grid w-full grid-cols-6 gap-4 border-b px-4 py-3 text-left text-sm transition-colors last:border-b-0 hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
+    >
+      <span className="text-muted-foreground">
+        {flight.date
+          ? flight.date.toISOString().split("T")[0]
+          : "—"}
+      </span>
 
-    return(
-        <div className="flex flex-col gap-2">
-            {flights.map((flight, index) => (
-                <div key={index} className="grid grid-cols-6 gap-4 py-2 text-sm sm:grid-cols-8">
-                    <span>{flight.date}</span>
-                    <span>{flight.flight_number}</span>
-                    <span>{flight.aircraft_type}</span>
-                    <span>{flight.departure}</span>
-                    <span>{flight.arrival}</span>
-                    <span>{flight.airline}</span>
-                </div>
-            ))}
-        </div>
-    )
+      <span className="font-medium">
+        {flight.flight_number ?? "—"}
+      </span>
 
+      <span className="text-muted-foreground">
+        {flight.aircraft_type ?? "—"}
+      </span>
+
+      <span>
+        {flight.departure ?? "—"}
+      </span>
+
+      <span>
+        {flight.arrival ?? "—"}
+      </span>
+
+      <span className="text-muted-foreground">
+        {flight.airline ?? "—"}
+      </span>
+    </button>
+  );
 }

@@ -2,13 +2,9 @@
 
 import { createClient } from "@/src/lib/supabase/server";
 import { revalidatePath } from "next/cache";
-import { FlightSchema } from "@/src/schemas/flightSchemas";
-import { redirect } from 'next/navigation';
+import { FlightInputSchema, type FormState } from "@/src/schemas/flightSchemas";
 
-
-
-export async function createFlight(formData: FormData) {
-
+export async function createFlight(prevState: FormState, formData: FormData): Promise<FormState> {
     const formValues = {
         flight_number: formData.get("flight_number"),
         date: formData.get("date"),
@@ -20,23 +16,40 @@ export async function createFlight(formData: FormData) {
         notes: formData.get("notes"),
     };
 
-    const flightData =  FlightSchema.parse(formValues)
+    const flightData =  FlightInputSchema.safeParse(formValues)
 
-    const supabase = await createClient();
-    
-    const{ data: { user } } = await supabase.auth.getUser();
-    if (!user) throw new Error("Unauthorised!");
+    if (!flightData.success) {
+        return {
+            status: 'error',
+            errorMessage: flightData.error.issues[0].message,
+            errorType: "validation"
+        }
+    } else {
+        const supabase = await createClient();
+        
+        const{ data: { user } } = await supabase.auth.getUser();
+        if (!user) throw new Error("Unauthorised!");
 
-    const insertData = ({
-        ...flightData,
-        user_id: user.id
-    })
-    const { error } = await supabase
-    .from('flights')
-    .insert(insertData);
+        const insertData = ({
+            ...flightData.data,
+            user_id: user.id
+        })
+        const { error } = await supabase
+        .from('flights')
+        .insert(insertData);
 
-    if(error) throw new Error(error.message);
-
-    revalidatePath("/flights");
-    redirect("/flights");
+        if(error){
+            return{
+                status: 'error',
+                errorMessage: "Please try again",
+                errorType: "operation"
+            }
+        };
+        revalidatePath("/flights");
+        return {
+            status: 'success',
+            errorMessage: "No error",
+            errorType: 'none'
+        }
+    }
 }

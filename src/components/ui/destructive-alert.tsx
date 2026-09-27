@@ -16,19 +16,50 @@ import {
 } from "./alert-dialog"
 import { Button } from "./button"
 import type { UUID } from "@/src/schemas/flightSchemas"
-import { deleteFlightById } from "@/src/features/actions/deleteFlights"
+import { deleteFlightById, type DeleteState } from "@/src/features/actions/deleteFlights"
+import { useState, useActionState, useEffect } from "react";
+import { toast } from "./toast";
 
 interface AlertDialogDestructiveProp {
   flightId: UUID;
+  onDeleteSuccess: () => void;
 };
 
-export function AlertDialogDestructive( { flightId } : AlertDialogDestructiveProp) {
+export function AlertDialogDestructive( { flightId, onDeleteSuccess } : AlertDialogDestructiveProp) {
 
-  const handleDelete = async () => {
-    deleteFlightById(flightId);
+  const deleteFlight = deleteFlightById.bind(null, flightId);
+
+  const initialState: DeleteState = {
+    status: 'idle',
+    message: ''
   }
+
+  const [open, setOpen] = useState<boolean>(false);
+
+  const [state, formAction, isPending] = useActionState(deleteFlight, initialState);
+  useEffect(() => {
+    if (state.status === 'success') {
+      setOpen(false)
+      onDeleteSuccess()
+      toast.add({
+            type: "success",
+            description: "Flight has been deleted",
+          })
+    }
+    if (state.status === 'error') {
+      setOpen(false)
+      toast.add({
+            type: "error",
+            description: "Flight could not be deleted",
+            priority: "high"
+          })
+    }
+  }, [state.status, onDeleteSuccess]);
+
+
+
   return (
-    <AlertDialog>
+    <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger
         render={<Button variant="destructive">Delete</Button>}
       />
@@ -42,12 +73,20 @@ export function AlertDialogDestructive( { flightId } : AlertDialogDestructivePro
             This will permanently delete this record. 
           </AlertDialogDescription>
         </AlertDialogHeader>
+        <form action={formAction}>
         <AlertDialogFooter>
           <AlertDialogCancel variant="outline">Cancel</AlertDialogCancel>
-          <AlertDialogAction variant="destructive"
-          onClick={handleDelete}>Delete</AlertDialogAction>
+
+          <AlertDialogAction type="submit" variant="destructive" disabled={isPending}>
+            {isPending ? 'Deleting...' : 'Delete' }
+          </AlertDialogAction>
+
         </AlertDialogFooter>
+        </form>
       </AlertDialogContent>
     </AlertDialog>
   ) 
 }
+
+
+

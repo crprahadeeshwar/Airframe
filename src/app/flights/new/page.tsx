@@ -1,17 +1,52 @@
 'use client'
 
-import React from 'react';
+import React, { useEffect, useActionState } from 'react';
 import { Calendar } from '@/src/components/ui/calendar';
 import { Button } from '@/src/components/ui/button';
 import { Popover, PopoverTrigger, PopoverContent } from '@/src/components/ui/popover';
 import { createFlight } from '@/src/features/actions/createFlights';
+import Link from 'next/link';
+import type { FormState } from '@/src/schemas/flightSchemas';
+import { ErrorAlert } from '@/src/components/ui/error-alert';
+import { toast } from '@/src/components/ui/toast';
+import { useRouter } from 'next/navigation';
+
+const initialState: FormState = {
+  status: 'idle',
+  errorMessage: "",
+  errorType: "none"
+};
 
 export default function NewFlightForm() {
 
+  const router = useRouter();
+
   const [date, setDate] = React.useState<Date | undefined>(undefined);
+  
+  const [state, formAction, isPending] = useActionState(createFlight, initialState);
+
+  useEffect (() => {
+    console.log('EFFECT RAN:', state.status);
+    if(state.status === 'error') {
+      console.log('ERROR BRANCH')
+      toast.add({
+            type: "error",
+            description: "Flight could not be created.",
+            priority: "high",
+    })}
+
+    if(state.status === 'success') {
+      console.log('SUCCESS BRANCH');
+      toast.add({
+            type: "success",
+            description: "Flight has been created.",
+          });
+      router.push('/flights');
+      }
+  }, [state.status, router])
 
   return(
-  <form action={createFlight}>
+  <form action={formAction}>
     <div className="mx-auto w-full max-w-3xl p-6">
 
       <div className="mb-8">
@@ -22,8 +57,6 @@ export default function NewFlightForm() {
       </div>
 
       <div className="rounded-2xl border p-6 shadow-sm">
-
-        //Flight Information
 
         <section>
           <h2 className="text-lg font-semibold">
@@ -46,16 +79,13 @@ export default function NewFlightForm() {
               <span className="text-sm font-medium">Date</span>
 
               <Popover>
-                <PopoverTrigger>
-                  <Button
+                <PopoverTrigger
+                  render = {<Button
                     variant="outline"
-                    type="button"
-                    className="justify-start text-left font-normal"
-                  >
+                    className="justify-start text-left font-normal">
                     {date ? date.toLocaleDateString() : "Pick a date"}
-                  </Button>
-                </PopoverTrigger>
-
+                  </Button>}
+                  />
                 <PopoverContent className="w-auto p-0">
                   <Calendar
                     mode="single"
@@ -89,9 +119,6 @@ export default function NewFlightForm() {
           </div>
         </section>
 
-
-        //Aircraft 
-
         <section className="mt-8">
           <h2 className="text-lg font-semibold">
             Aircraft
@@ -109,9 +136,6 @@ export default function NewFlightForm() {
             </label>
           </div>
         </section>
-
-
-        //Route 
 
         <section className="mt-8">
           <h2 className="text-lg font-semibold">
@@ -147,9 +171,6 @@ export default function NewFlightForm() {
           </div>
         </section>
 
-
-        //Notes 
-
         <section className="mt-8">
           <h2 className="text-lg font-semibold">
             Notes
@@ -167,24 +188,29 @@ export default function NewFlightForm() {
             </label>
           </div>
         </section>
-
-
-        //Actions
         
         <div className="mt-8 flex justify-end gap-3 border-t pt-6">
-          <Button
+          <Link href="/flights"><Button
             type="button"
             variant="outline"
           >
             Cancel
           </Button>
+          </Link>
 
-          <Button type="submit">
-            Add Flight
+          <Button type="submit" disabled={isPending}>
+            {isPending ? "Adding..." : "Add Flight"}
           </Button>
         </div>
-
       </div>
+      {state.errorMessage && state.errorType === "validation" && (
+      <ErrorAlert title="Could Not Add Flight" message={state.errorMessage}/>
+    )}
+    </div>
+    <div>
+      {state.errorMessage && state.errorType === "operation" && (
+      <ErrorAlert title="Oops. Something Went Wrong" message={state.errorMessage}/>
+    )}
     </div>
   </form>
 )

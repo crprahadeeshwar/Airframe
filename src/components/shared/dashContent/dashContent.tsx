@@ -1,17 +1,32 @@
-import DashHeader from "./dashHeader"
-import FlightCard from "./flightCards"
-import FlightTable from "../table/flightTable"
-
+import DashHeader from "./dashHeader";
+import DashoardMetrics from "./dashMetrics";
+import DashboardTable from "./dashTable";
+import { DashboardMetricsSkeleton, DashboardTableSkeleton } from "../../skeletons/dashboardSkeletons";
+import { Suspense } from "react";
 export default function DashboardContent() {
-    return(
+  return (
+    <div className="flex min-h-full flex-col">
+      <DashHeader />
+
+      <main className="flex-1 space-y-6 p-6">
         <div>
-            <DashHeader/>
-                <div className="flex flex-row gap-4">
-                    <FlightCard title="Flights" metric={100}/>
-                    <FlightCard title="Aircraft" metric={5}/>
-                    <FlightCard title="Airlines" metric={10}/>
-                </div>
-            <FlightTable />
+          <h1 className="text-2xl font-semibold tracking-tight">
+            Dashboard
+          </h1>
+
+          <p className="mt-1 text-sm text-muted-foreground">
+            Your flight history at a glance.
+          </p>
         </div>
-    )
+
+        <Suspense fallback={<DashboardMetricsSkeleton />}>
+          <DashoardMetrics />
+        </Suspense>
+
+        <Suspense fallback={<DashboardTableSkeleton />}>
+          <DashboardTable />
+        </Suspense>
+      </main>
+    </div>
+  );
 }
