@@ -18,7 +18,7 @@ export async function fetchFlights( { order, criteria, search} :fetchFlightsPara
 
   const userId = uuidSchema.parse(user.id);
 
-  const columns = ['date', 'flight_number', 'registration', 'airline', 'aircraft_type', 'departure', 'arrival', 'notes']
+  const columns = ['flight_number', 'registration', 'airline', 'aircraft_type', 'departure', 'arrival', 'notes']
 
   let query = supabase
   .from('flights')

@@ -34,7 +34,6 @@ const EmailSchema = z.email();
 const PasswordSchema = z.string();
 
 export const criteriaSchema = z.enum([
-  'date',
   'flight_number',
   'registration',
   'airline',
@@ -76,3 +75,4 @@ export type Password = z.infer<typeof PasswordSchema>;
 export type Criteria = z.infer<typeof criteriaSchema>;
 export type Order = z.infer<typeof orderSchema>;
 export type Search = z.infer<typeof searchSchema>;
+export type QuerySchema = z.infer<typeof SearchQueryParamsSchema>;

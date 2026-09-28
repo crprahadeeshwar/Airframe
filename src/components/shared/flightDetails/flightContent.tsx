@@ -2,6 +2,7 @@
 
 import FlightHeader from "./flightHeader";
 import FlightTable from "../table/flightTable";
+import FlightControls from "../controls/flightControls";
 import { Button } from "../../ui/button";
 import Link from "next/link";
 import type { FlightTypeSchema } from "@/src/schemas/flightSchemas";
@@ -47,7 +48,6 @@ export default function FlightContent({
       <FlightHeader />
 
       <main className="flex-1 space-y-6 p-6">
-
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h1 className="text-2xl font-semibold tracking-tight">
@@ -59,11 +59,13 @@ export default function FlightContent({
             </p>
           </div>
 
-            <Link href="/flights/new">
+          <Link href="/flights/new">
               <Button type="button" variant='default'>Add Flight</Button>
-            </Link>
-
+          </Link>
         </div>
+
+        <FlightControls />
+
         <FlightTable
           flightDataArray={flightDataArrayProps}
           onFlightSelect={handleOnClick}
