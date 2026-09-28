@@ -33,6 +33,26 @@ const FlightSchema = z.object({
 const EmailSchema = z.email();
 const PasswordSchema = z.string();
 
+export const criteriaSchema = z.enum([
+  'flight_number',
+  'registration',
+  'airline',
+  'aircraft_type',
+  'departure',
+  'arrival',
+  'notes',
+]).nullable();
+
+export const orderSchema = z.enum(['oldest', 'newest']);
+
+export const searchSchema = z.string().nullable();
+
+export const SearchQueryParamsSchema = z.object({
+  criteria: criteriaSchema,
+  order: orderSchema,
+  search: searchSchema,
+});
+
 export type FormState = {
   status: 'idle' | 'success' | 'error'
   errorMessage: string;
@@ -52,3 +72,7 @@ export type FlightTypeSchema = z.infer<typeof FlightSchema>;
 export type UUID = z.infer<typeof uuidSchema>;
 export type Email = z.infer<typeof EmailSchema>;
 export type Password = z.infer<typeof PasswordSchema>;
+export type Criteria = z.infer<typeof criteriaSchema>;
+export type Order = z.infer<typeof orderSchema>;
+export type Search = z.infer<typeof searchSchema>;
+export type QuerySchema = z.infer<typeof SearchQueryParamsSchema>;
