@@ -19,6 +19,17 @@ const FlightInputSchema = z.object({
 });
 
 const FlightSchema = z.object({
+  flight_number: z.string().nullable().transform(emptyToNull),
+  date: z.preprocess((value) => value === "" ? null : value, z.coerce.date().nullable()),
+  departure: z.string().nullable().transform(emptyToNull),
+  arrival: z.string().nullable().transform(emptyToNull),
+  airline: z.string().nullable().transform(emptyToNull),
+  aircraft_type: z.string().nullable().transform(emptyToNull),
+  registration: z.string().nullable().transform(emptyToNull),
+  notes: z.string().nullable().transform(emptyToNull),
+})
+
+const FlightTestSchema = z.object({
   id: z.uuid(),
   flight_number: z.string().nullable().transform(emptyToNull),
   date: z.preprocess((value) => value === "" ? null : value, z.coerce.date().nullable()),
@@ -63,6 +74,7 @@ export {
     uuidSchema, 
     FlightInputSchema,
     FlightSchema,
+    FlightTestSchema,
     EmailSchema,
     PasswordSchema
 }

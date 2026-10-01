@@ -3,11 +3,33 @@
 import { createClient } from "@/src/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import type { UUID } from "@/src/schemas/flightSchemas";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
 export type DeleteState = {
     status: "idle" | "success" | "error";
     message: string;
 }
+
+export type DeleteHelperParams = {
+    supabase: SupabaseClient<any, "public", "public", any, any>,
+    flightId: UUID,
+    userId: UUID
+};
+
+export async function deleteFlightByIdHelper ({
+    supabase,
+    flightId,
+    userId
+} : DeleteHelperParams ) {
+
+    return await supabase
+    .from('flights')
+    .delete()
+    .eq('id', flightId)
+    .eq('user_id', userId)
+    .select();
+}
+
 export async function deleteFlightById(flightId: UUID, prevState: DeleteState): Promise<DeleteState> {
 
     const supabase = await createClient();
@@ -16,11 +38,11 @@ export async function deleteFlightById(flightId: UUID, prevState: DeleteState): 
     
     if (!user) throw new Error("Unauthorised!");
 
-    const { error } = await supabase
-        .from('flights')
-        .delete()
-        .eq('id', flightId)
-        .eq('user_id', user.id);
+    const { error } = await deleteFlightByIdHelper({
+        supabase: supabase,
+        flightId: flightId,
+        userId: user.id,
+    });
 
     if (error) {
         return {
