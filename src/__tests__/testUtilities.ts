@@ -28,6 +28,19 @@ export const adminSupabase = createClient(
         },
     }
 );
+
+export const e2eAdminSupabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SECRET_SERVICE_ROLE_KEY!,
+    {
+        auth: {
+            persistSession: false,
+            autoRefreshToken: false,
+            detectSessionInUrl: false,
+        },
+    }
+);
+
 export const testDataAlice = {
     id: AliceFlightId,
     flight_number: "EK525",
