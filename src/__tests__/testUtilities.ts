@@ -4,7 +4,11 @@ export const ALICE_ID = crypto.randomUUID();
 export const BOB_ID = crypto.randomUUID();
 export const AliceFlightId = crypto.randomUUID();
 export const BobFlightId = crypto.randomUUID();
-
+console.log({
+    SUPABASE_URL: !!process.env.SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY: !!process.env.SUPABASE_PUBLISHABLE_KEY,
+    SUPABASE_SECRET_KEY: !!process.env.SUPABASE_SECRET_KEY,
+});
 export const supabase = createClient(
     process.env.SUPABASE_URL!,
     process.env.SUPABASE_PUBLISHABLE_KEY!,
