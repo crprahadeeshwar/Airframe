@@ -7,7 +7,7 @@ Airframe is a multi-user application with database-enforced ownership security. 
 
 A user may only access or modify their own flight record.
 
-This goal is achieved and enforced by the following security layers:
+## This goal is achieved and enforced by the following security layers:
 
 - Trust Boundaries
 Airframe treats the browser as an untrusted environment.
