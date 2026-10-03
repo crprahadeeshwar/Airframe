@@ -9,9 +9,10 @@ import {
     type FormState,
 } from "@/src/schemas/flightSchemas";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/src/lib/supabase/database.types";
 
 export type InsertFlightParams = {
-    supabase: SupabaseClient<any, "public", "public", any, any>;
+    supabase: SupabaseClient<Database>;
     insertData: FlightTypeInputSchema;
     userId: UUID;
 };
@@ -24,6 +25,7 @@ export async function insertFlight({
 
     const flightData = {
         ...insertData,
+        date: insertData.date?.toISOString() ?? null,
         user_id: userId,
     };
 

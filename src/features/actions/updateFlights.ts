@@ -9,7 +9,7 @@ import {
     type FlightTypeInputSchema,
 } from "@/src/schemas/flightSchemas";
 import type { SupabaseClient } from "@supabase/supabase-js";
-
+import { Database } from "@/src/lib/supabase/database.types";
 
 export type UpdateState = {
     status: "idle" | "success" | "error";
@@ -18,7 +18,7 @@ export type UpdateState = {
 
 
 export type UpdateFlightHelperParams = {
-    supabase: SupabaseClient<any, "public", "public", any, any>;
+    supabase: SupabaseClient<Database>;
     flightId: UUID;
     userId: UUID;
     updateData: FlightTypeInputSchema;
@@ -31,14 +31,18 @@ export async function updateFlightByIdHelper({
     userId,
     updateData,
 }: UpdateFlightHelperParams) {
+
+    const refinedUpdateData = {
+        ...updateData,
+        date: updateData.date?.toISOString() ?? null
+    }
     return await supabase
         .from("flights")
-        .update(updateData)
+        .update(refinedUpdateData)
         .eq("id", flightId)
         .eq("user_id", userId)
         .select();
 }
-
 
 export async function updateFlight(
     flightId: string,

@@ -39,6 +39,7 @@ export function AlertDialogDestructive( { flightId, onDeleteSuccess } : AlertDia
   const [state, formAction, isPending] = useActionState(deleteFlight, initialState);
   useEffect(() => {
     if (state.status === 'success') {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- close dialog after server action completes
       setOpen(false)
       onDeleteSuccess()
       toast.add({

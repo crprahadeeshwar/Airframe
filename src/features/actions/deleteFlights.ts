@@ -4,6 +4,7 @@ import { createClient } from "@/src/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import type { UUID } from "@/src/schemas/flightSchemas";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { Database } from "@/src/lib/supabase/database.types";
 
 export type DeleteState = {
     status: "idle" | "success" | "error";
@@ -11,7 +12,7 @@ export type DeleteState = {
 }
 
 export type DeleteHelperParams = {
-    supabase: SupabaseClient<any, "public", "public", any, any>,
+    supabase: SupabaseClient<Database>,
     flightId: UUID,
     userId: UUID
 };

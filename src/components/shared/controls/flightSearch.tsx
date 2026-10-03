@@ -12,6 +12,7 @@ export default function Search() {
   const [text, setText] = useState(searchParams.get("search") || "");
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- sync local input state with URL search params
     setText(searchParams.get("search") || "");
   }, [searchParams]);
 
