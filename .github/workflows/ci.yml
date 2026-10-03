@@ -35,6 +35,15 @@ jobs:
             echo "SUPABASE_PUBLISHABLE_KEY=$(grep '^PUBLISHABLE_KEY=' supabase.env | cut -d'=' -f2- | tr -d '\"')"
             echo "SUPABASE_SECRET_KEY=$(grep '^SECRET_KEY=' supabase.env | cut -d'=' -f2- | tr -d '\"')"
             } > .env.test.local
+      - name: Check test environment
+        run: |
+            echo "Environment file:"
+            cat .env.test.local | sed 's/=.*/=<redacted>/'
+            echo "Expected variables:"
+            grep -E '^(SUPABASE_URL|SUPABASE_PUBLISHABLE_KEY|SUPABASE_SECRET_KEY)=' .env.test.local || true
+
+      - name: Run tests
+        run: npm test -- --mode test --run
       
       - name: Run tests
         run: npm test -- --mode test --run
