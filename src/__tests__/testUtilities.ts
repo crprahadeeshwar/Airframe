@@ -4,12 +4,7 @@ export const ALICE_ID = crypto.randomUUID();
 export const BOB_ID = crypto.randomUUID();
 export const AliceFlightId = crypto.randomUUID();
 export const BobFlightId = crypto.randomUUID();
-console.log({
-    SUPABASE_URL: !!process.env.SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY: !!process.env.SUPABASE_PUBLISHABLE_KEY,
-    SUPABASE_SECRET_KEY: !!process.env.SUPABASE_SECRET_KEY,
-});
-console.log("creating supabase client");
+
 export const supabase = createClient(
     process.env.SUPABASE_URL!,
     process.env.SUPABASE_PUBLISHABLE_KEY!,
@@ -21,7 +16,7 @@ export const supabase = createClient(
         },
     }
 );
-console.log("creating admin client");
+
 export const adminSupabase = createClient(
     process.env.SUPABASE_URL!,
     process.env.SUPABASE_SECRET_KEY!,
@@ -33,7 +28,7 @@ export const adminSupabase = createClient(
         },
     }
 );
-console.log("creating e2e admin client");
+
 export const e2eAdminSupabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SECRET_SERVICE_ROLE_KEY!,
