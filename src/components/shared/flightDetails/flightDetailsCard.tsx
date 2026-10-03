@@ -17,9 +17,10 @@ interface FlightDetailsCardProps {
   flightId: UUID;
   onClose: () => void;
   openEdit: (state: boolean) => void;
+  onDeleteSuccess: () => void;
 }
 
-export default function FlightDetailsCard({ flightData, flightId, onClose, openEdit } : FlightDetailsCardProps) {
+export default function FlightDetailsCard({ flightData, flightId, onClose, openEdit, onDeleteSuccess } : FlightDetailsCardProps) {
 
   return (
     <Card className="m-4 w-full max-w-2xl">
@@ -101,7 +102,7 @@ export default function FlightDetailsCard({ flightData, flightId, onClose, openE
           Edit
         </Button>
 
-        <AlertDialogDestructive flightId = {flightData.id} onDeleteSuccess={onClose}  />
+        <AlertDialogDestructive flightId = {flightData.id} onDeleteSuccess={onDeleteSuccess}  />
       </CardFooter>
 
     </Card>

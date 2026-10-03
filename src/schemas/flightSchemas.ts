@@ -19,6 +19,7 @@ const FlightInputSchema = z.object({
 });
 
 const FlightSchema = z.object({
+  id: z.uuid(),
   flight_number: z.string().nullable().transform(emptyToNull),
   date: z.preprocess((value) => value === "" ? null : value, z.coerce.date().nullable()),
   departure: z.string().nullable().transform(emptyToNull),
@@ -93,7 +94,7 @@ export {
     PasswordSchema
 }
 
-export type FlightTypeInputSchema = z.infer<typeof FlightSchema>;
+export type FlightTypeInputSchema = z.infer<typeof FlightInputSchema>;
 export type FlightTypeSchema = z.infer<typeof FlightSchema>;
 export type UUID = z.infer<typeof uuidSchema>;
 export type Email = z.infer<typeof EmailSchema>;

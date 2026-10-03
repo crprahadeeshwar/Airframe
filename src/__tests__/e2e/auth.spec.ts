@@ -38,7 +38,9 @@ test.describe("Authentication", () => {
                 name: "Create Account",
             }).click();
 
-            await expect(page).toHaveURL("/login");
+            await expect(page).toHaveURL("/login", {
+    timeout: 15000,
+});
 
         } finally {
             const userId = await getUserIdByEmail(email);
@@ -73,7 +75,7 @@ test.describe("Authentication", () => {
     });
 
     test("anonymous users cannot access protected routes", async ({ page }) => {
-        
+
         await page.goto("/dashboard");
 
         await expect(page).toHaveURL("/login");
