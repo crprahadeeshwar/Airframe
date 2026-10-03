@@ -28,8 +28,14 @@ jobs:
         run: npx supabase db reset
 
       - name: Load local Supabase environment
-        run: npx supabase status --output env > .env.test.local
-
+        run: |
+            npx supabase status --output env > supabase.env
+            {
+            echo "SUPABASE_URL=$(grep '^API_URL=' supabase.env | cut -d'=' -f2- | tr -d '\"')"
+            echo "SUPABASE_PUBLISHABLE_KEY=$(grep '^PUBLISHABLE_KEY=' supabase.env | cut -d'=' -f2- | tr -d '\"')"
+            echo "SUPABASE_SECRET_KEY=$(grep '^SECRET_KEY=' supabase.env | cut -d'=' -f2- | tr -d '\"')"
+            } > .env.test.local
+      
       - name: Run tests
         run: npm test -- --mode test --run
 
