@@ -1,7 +1,6 @@
 import { beforeAll, describe, expect, it} from "vitest";
 
 import {
-    ALICE_ID,
     supabase,
     adminSupabase,
 } from "../testUtilities";

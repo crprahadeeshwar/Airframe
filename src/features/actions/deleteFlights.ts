@@ -30,7 +30,7 @@ export async function deleteFlightByIdHelper ({
     .eq('user_id', userId)
     .select();
 }
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- required by useActionState signature
 export async function deleteFlightById(flightId: UUID, prevState: DeleteState): Promise<DeleteState> {
 
     const supabase = await createClient();

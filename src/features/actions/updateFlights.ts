@@ -72,13 +72,9 @@ export async function updateFlight(
 
     const supabase = await createClient();
 
-    console.log("UPDATE: before getUser");
-
     const {
         data: { user },
     } = await supabase.auth.getUser();
-
-    console.log("UPDATE: after getUser");
 
     if (!user) {
         throw new Error("Unauthorised!");
@@ -86,16 +82,12 @@ export async function updateFlight(
 
     const Id = uuidSchema.parse(flightId);
 
-    console.log("UPDATE: before database update");
-
     const { error } = await updateFlightByIdHelper({
         supabase,
         flightId: Id,
         userId: user.id,
         updateData: flightData.data,
     });
-
-    console.log("UPDATE: after database update", error);
 
     if (error) {
         console.log(error.message);

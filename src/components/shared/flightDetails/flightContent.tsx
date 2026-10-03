@@ -94,7 +94,6 @@ export default function FlightContent({
             <div onClick={(event) => event.stopPropagation()}>
               <FlightDetailsCard
                 flightData={selectedFlight}
-                flightId={selectedFlight.id}
                 onClose={handleDetailsClose}
                 openEdit={handleEditOpen}
                 onDeleteSuccess={handleDeleteSuccess}
