@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 
+
 export const ALICE_ID = crypto.randomUUID();
 export const BOB_ID = crypto.randomUUID();
 export const AliceFlightId = crypto.randomUUID();
