@@ -43,10 +43,13 @@ export type Database = {
           }
           Functions: {
             "get_user_flight_stats":
-{ Args: Record<PropertyKey, never>; Returns: {
-              "aircraft_count": number,"airline_count": number,"flight_count": number
-            }[]
-                           }
+            { Args: Record<PropertyKey, never>; Returns: {
+                          "aircraft_count": number,"airline_count": number,"flight_count": number
+                        }[]
+                           },
+            "health_check":
+            { Args: Record<PropertyKey, never>; Returns: boolean
+                                      }
           }
           Enums: {
             [_ in never]: never

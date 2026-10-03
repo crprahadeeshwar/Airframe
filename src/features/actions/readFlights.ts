@@ -11,6 +11,7 @@ import {
 } from "@/src/schemas/flightSchemas";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "@/src/lib/supabase/database.types";
+import { logger } from "@/src/lib/logger";
 
 export type ReadFlightParams = {
     supabase: SupabaseClient<Database>;

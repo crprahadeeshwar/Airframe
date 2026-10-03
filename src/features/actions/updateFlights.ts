@@ -10,6 +10,7 @@ import {
 } from "@/src/schemas/flightSchemas";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "@/src/lib/supabase/database.types";
+import { logger } from "@/src/lib/logger";
 
 export type UpdateState = {
     status: "idle" | "success" | "error";
@@ -64,6 +65,12 @@ export async function updateFlight(
     const flightData = FlightInputSchema.safeParse(formValues);
 
     if (!flightData.success) {
+        logger.error(
+            "flight.update.failed",
+            "Validation error: invalid flight data",
+            { errorType: "validation" }
+        );
+
         return {
             status: "error",
             message: flightData.error.issues[0].message,
@@ -90,7 +97,12 @@ export async function updateFlight(
     });
 
     if (error) {
-        console.log(error.message);
+        logger.error(
+            "flight.update.failed",
+            "Operation error: could not update flight",
+            { flightId: Id, userId: user.id },
+            error
+        );
 
         return {
             status: "error",
@@ -99,6 +111,12 @@ export async function updateFlight(
     }
 
     revalidatePath("/flights");
+
+    logger.info(
+        "flight.update.success",
+        "Flight updated successfully",
+        { flightId: Id, userId: user.id }
+    );
 
     return {
         status: "success",
