@@ -31,7 +31,7 @@ jobs:
         run: npx supabase status --output env > .env.test.local
 
       - name: Run tests
-        run: npm test -- --run
+        run: npm test -- --mode test --run
 
       - name: Lint
         run: npm run lint
