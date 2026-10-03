@@ -10,6 +10,7 @@ import {
 } from "@/src/schemas/flightSchemas";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/src/lib/supabase/database.types";
+import { logger } from "@/src/lib/logger";
 
 export type InsertFlightParams = {
     supabase: SupabaseClient<Database>;
@@ -56,6 +57,15 @@ export async function createFlight(
     const flightData = FlightInputSchema.safeParse(formValues);
 
     if (!flightData.success) {
+
+        logger.error(
+            "flight.create.failed",
+            "Validation error: invalid flight data",
+            { 
+                errorType: "validation",
+                //issue: flightData.error.issues[0].message,
+             }
+        )
         return {
             status: "error",
             errorMessage: flightData.error.issues[0].message,
@@ -73,13 +83,22 @@ export async function createFlight(
         throw new Error("Unauthorised!");
     }
 
+    const userId = user.id;
+
     const { error } = await insertFlight({
         supabase,
         insertData: flightData.data,
-        userId: user.id,
+        userId: userId,
     });
 
     if (error) {
+        logger.error(
+            "flight.create.failed",
+            "Operation error: could not create flight",
+            { userId },
+            error
+        )
+
         return {
             status: "error",
             errorMessage: "Could Not Create Flight. Try Again.",
@@ -88,6 +107,11 @@ export async function createFlight(
     }
 
     revalidatePath("/flights");
+    logger.info(
+        "flight.create.success",
+        "Flight created successfully",
+        { userId }
+    );
 
     return {
         status: "success",

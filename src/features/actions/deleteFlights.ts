@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import type { UUID } from "@/src/schemas/flightSchemas";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "@/src/lib/supabase/database.types";
+import { logger } from "@/src/lib/logger";
 
 export type DeleteState = {
     status: "idle" | "success" | "error";
@@ -46,12 +47,25 @@ export async function deleteFlightById(flightId: UUID, prevState: DeleteState): 
     });
 
     if (error) {
+        logger.error(
+            "flight.delete.failed",
+            "Failed to delete flight",
+            { flightId },
+            error
+        );
+
         return {
             status: "error",
             message: "Could Not Delete Flight. Try Again."
         }
     }
     revalidatePath('/flights');
+
+    logger.info(
+    "flight.delete.success",
+    "Flight deleted successfully",
+    { flightId }
+    );
     return {
         status: "success",
         message: 'Record Deleted Successfully'
