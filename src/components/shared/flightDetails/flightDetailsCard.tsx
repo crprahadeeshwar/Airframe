@@ -8,19 +8,16 @@ import {
 } from "../../ui/card"
 import { AlertDialogDestructive } from "../../ui/destructive-alert"
 import { X, ArrowRight } from "lucide-react";
-import type { FlightTypeSchema, UUID } from "@/src/schemas/flightSchemas"
-import { useActionState } from "react";
-import type { DeleteState } from "@/src/features/actions/deleteFlights";
+import type { FlightTypeSchema } from "@/src/schemas/flightSchemas"
 
 interface FlightDetailsCardProps {
   flightData: FlightTypeSchema;
-  flightId: UUID;
   onClose: () => void;
   openEdit: (state: boolean) => void;
   onDeleteSuccess: () => void;
 }
 
-export default function FlightDetailsCard({ flightData, flightId, onClose, openEdit, onDeleteSuccess } : FlightDetailsCardProps) {
+export default function FlightDetailsCard({ flightData, onClose, openEdit, onDeleteSuccess } : FlightDetailsCardProps) {
 
   return (
     <Card className="m-4 w-full max-w-2xl">

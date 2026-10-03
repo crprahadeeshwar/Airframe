@@ -9,7 +9,7 @@ import {
     type FlightTypeInputSchema,
 } from "@/src/schemas/flightSchemas";
 import type { SupabaseClient } from "@supabase/supabase-js";
-
+import { Database } from "@/src/lib/supabase/database.types";
 
 export type UpdateState = {
     status: "idle" | "success" | "error";
@@ -18,7 +18,7 @@ export type UpdateState = {
 
 
 export type UpdateFlightHelperParams = {
-    supabase: SupabaseClient<any, "public", "public", any, any>;
+    supabase: SupabaseClient<Database>;
     flightId: UUID;
     userId: UUID;
     updateData: FlightTypeInputSchema;
@@ -31,14 +31,18 @@ export async function updateFlightByIdHelper({
     userId,
     updateData,
 }: UpdateFlightHelperParams) {
+
+    const refinedUpdateData = {
+        ...updateData,
+        date: updateData.date?.toISOString() ?? null
+    }
     return await supabase
         .from("flights")
-        .update(updateData)
+        .update(refinedUpdateData)
         .eq("id", flightId)
         .eq("user_id", userId)
         .select();
 }
-
 
 export async function updateFlight(
     flightId: string,
@@ -68,13 +72,9 @@ export async function updateFlight(
 
     const supabase = await createClient();
 
-    console.log("UPDATE: before getUser");
-
     const {
         data: { user },
     } = await supabase.auth.getUser();
-
-    console.log("UPDATE: after getUser");
 
     if (!user) {
         throw new Error("Unauthorised!");
@@ -82,16 +82,12 @@ export async function updateFlight(
 
     const Id = uuidSchema.parse(flightId);
 
-    console.log("UPDATE: before database update");
-
     const { error } = await updateFlightByIdHelper({
         supabase,
         flightId: Id,
         userId: user.id,
         updateData: flightData.data,
     });
-
-    console.log("UPDATE: after database update", error);
 
     if (error) {
         console.log(error.message);

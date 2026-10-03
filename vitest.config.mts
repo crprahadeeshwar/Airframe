@@ -8,5 +8,6 @@ export default defineConfig(({ mode }) => ({
   test: {
     environment: 'jsdom',
     env: loadEnv(mode, process.cwd(), ''),
+    include: ['src/__tests__/**/*.test.{ts,tsx}'],
   },
 }))

@@ -49,7 +49,7 @@ export default function NewFlightForm() {
       <div className="mb-8">
         <h1 className="text-3xl font-semibold">Add Flight</h1>
         <p className="text-muted-foreground">
-          Log a flight you've taken or spotted.
+          Log a flight you&apos;ve taken or spotted.
         </p>
       </div>
 

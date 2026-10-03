@@ -41,7 +41,7 @@ export default function UpdateFlightDetailsCard({ flight, onClose, onSuccess }: 
             priority: "high"
           })
     }
-  }, [state.status, onClose]);
+  }, [state.status, onSuccess]);
 
   return (
     <div>

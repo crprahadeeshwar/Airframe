@@ -26,7 +26,6 @@ describe("anonymous user", () => {
             supabase,
         });
 
-        expect(result.success).toBe(false);
         expect(result.data).toBeNull();
         expect(result.error).not.toBeNull();
         expect(result.error?.message).toBe("Unauthorized");

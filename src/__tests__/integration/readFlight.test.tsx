@@ -18,7 +18,7 @@ beforeAll(async () => {
         throw aliceError;
     }
 
-    let insertDataAlice = FlightSchema.parse(testDataAlice);
+    const insertDataAlice = FlightSchema.parse(testDataAlice);
 
     const { error: insertAliceDataError } = await insertFlight({
         supabase: adminSupabase,
@@ -43,7 +43,7 @@ beforeAll(async () => {
         throw bobError;
     }
 
-    let insertDataBob = FlightSchema.parse(testDataBob);
+    const insertDataBob = FlightSchema.parse(testDataBob);
 
     const { error: insertBobDataError } = await insertFlight({
         supabase: adminSupabase,

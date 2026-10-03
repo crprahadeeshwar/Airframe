@@ -10,10 +10,10 @@ import {
     type UUID,
 } from "@/src/schemas/flightSchemas";
 import type { SupabaseClient } from "@supabase/supabase-js";
-
+import { Database } from "@/src/lib/supabase/database.types";
 
 export type ReadFlightParams = {
-    supabase: SupabaseClient<any, "public", "public", any, any>;
+    supabase: SupabaseClient<Database>;
     userId: UUID;
     criteria: Criteria;
     order: Order;
@@ -22,9 +22,15 @@ export type ReadFlightParams = {
 
 
 export type ReadFlightByIdParams = {
-    supabase: SupabaseClient<any, "public", "public", any, any>;
+    supabase: SupabaseClient<Database>;
     flightId: UUID;
     userId: UUID;
+};
+
+type FlightStats = {
+    flight_count: number;
+    aircraft_count: number;
+    airline_count: number;
 };
 
 export async function readAllFlights({
@@ -96,11 +102,32 @@ export async function readFlightById({
 export async function getFlightStats({
     supabase,
 }: {
-    supabase: SupabaseClient<any, "public", "public", any, any>;
+    supabase: SupabaseClient<Database>;
 }) {
-    return await supabase.rpc("get_user_flight_stats");
-}
+    const { data, error } = await supabase.rpc("get_user_flight_stats");
+    if (error) {
+        return { data: null, error };
+    }
 
+    const stats = data?.[0];
+
+    if (
+        !stats ||
+        typeof stats.flight_count !== "number" ||
+        typeof stats.aircraft_count !== "number" ||
+        typeof stats.airline_count !== "number"
+    ) {
+        return {
+            data: null,
+            error: new Error("Invalid flight stats response"),
+        };
+    }
+
+    return {
+        data: stats as FlightStats,
+        error: null,
+    };
+}
 
 export async function fetchFlights({
     order,
