@@ -14,6 +14,17 @@ export async function createTestUser(email: string, password: string) {
     return data.user;
 }
 
+export async function deleteTestFlights(userId: string) {
+    const { error } = await e2eAdminSupabase
+        .from("flights")
+        .delete()
+        .eq("user_id", userId);
+
+    if (error) {
+        throw error;
+    }
+}
+
 export async function deleteTestuser(userId: string) {
 
     const { error } = await e2eAdminSupabase.auth.admin.deleteUser(userId);
