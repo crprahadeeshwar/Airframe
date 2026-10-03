@@ -4,11 +4,11 @@ import UpdateFlightDetailsCard from '../components/shared/flightDetails/updateFl
 import FlightsPage from './flights/page'
 import NewFlightForm from './flights/new/page'
 import SignupPage from './signup/page'
-
+import LoginPage from './login/page'
 
 const page = () => {
   return (
-    <DashboardPage/>
+    <LoginPage/>
   )
 }
 

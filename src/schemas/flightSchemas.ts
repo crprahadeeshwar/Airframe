@@ -30,8 +30,34 @@ const FlightSchema = z.object({
   notes: z.string().nullable().transform(emptyToNull),
 })
 
+const FlightTestSchema = z.object({
+  id: z.uuid(),
+  flight_number: z.string().nullable().transform(emptyToNull),
+  date: z.preprocess((value) => value === "" ? null : value, z.coerce.date().nullable()),
+  departure: z.string().nullable().transform(emptyToNull),
+  arrival: z.string().nullable().transform(emptyToNull),
+  airline: z.string().nullable().transform(emptyToNull),
+  aircraft_type: z.string().nullable().transform(emptyToNull),
+  registration: z.string().nullable().transform(emptyToNull),
+  notes: z.string().nullable().transform(emptyToNull),
+})
+
 const EmailSchema = z.email();
-const PasswordSchema = z.string();
+const PasswordSchema = z
+  .string()
+  .min(8, { message: "Password must be at least 8 characters long" })
+  .refine((val) => /[A-Z]/.test(val), {
+    message: "Password must contain at least one uppercase letter",
+  })
+  .refine((val) => /[a-z]/.test(val), {
+    message: "Password must contain at least one lowercase letter",
+  })
+  .refine((val) => /[0-9]/.test(val), {
+    message: "Password must contain at least one number",
+  })
+  .refine((val) => /[^A-Za-z0-9]/.test(val), {
+    message: "Password must contain at least one special character",
+  });
 
 export const criteriaSchema = z.enum([
   'flight_number',
@@ -63,11 +89,12 @@ export {
     uuidSchema, 
     FlightInputSchema,
     FlightSchema,
+    FlightTestSchema,
     EmailSchema,
     PasswordSchema
 }
 
-export type FlightTypeInputSchema = z.infer<typeof FlightSchema>;
+export type FlightTypeInputSchema = z.infer<typeof FlightInputSchema>;
 export type FlightTypeSchema = z.infer<typeof FlightSchema>;
 export type UUID = z.infer<typeof uuidSchema>;
 export type Email = z.infer<typeof EmailSchema>;

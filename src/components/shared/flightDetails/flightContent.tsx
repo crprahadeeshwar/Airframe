@@ -9,6 +9,9 @@ import type { FlightTypeSchema } from "@/src/schemas/flightSchemas";
 import { useState } from "react";
 import FlightDetailsCard from "./flightDetailsCard";
 import UpdateFlightDetailsCard from "./updateFlightCard";
+import { useRouter } from "next/navigation";
+
+
 
 interface FlightContentProps {
   flightDataArrayProps: FlightTypeSchema[];
@@ -17,6 +20,9 @@ interface FlightContentProps {
 export default function FlightContent({
   flightDataArrayProps,
 }: FlightContentProps) {
+
+  const router = useRouter();
+
   const [selectedFlight, setSelectedFlight] =
     useState<FlightTypeSchema | null>(null);
 
@@ -41,6 +47,14 @@ export default function FlightContent({
   const handleEditSuccess = () => {
     setIsEdit(false);
     setSelectedFlight(null);
+  };
+
+  const handleDeleteSuccess = () => {
+
+    setSelectedFlight(null);
+
+    router.refresh();
+
   };
 
   return (
@@ -72,36 +86,38 @@ export default function FlightContent({
         />
       </main>
 
-      {selectedFlight !== null && !isEdit && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
-          onClick={handleDetailsClose}
-        >
-          <div onClick={(event) => event.stopPropagation()}>
-            <FlightDetailsCard
-              flightData={selectedFlight}
-              flightId={selectedFlight.id}
-              onClose={handleDetailsClose}
-              openEdit={handleEditOpen}
-            />
+        {selectedFlight !== null && !isEdit && (
+          <div
+            className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 px-4 py-8 backdrop-blur-sm"
+            onClick={handleDetailsClose}
+          >
+            <div onClick={(event) => event.stopPropagation()}>
+              <FlightDetailsCard
+                flightData={selectedFlight}
+                flightId={selectedFlight.id}
+                onClose={handleDetailsClose}
+                openEdit={handleEditOpen}
+                onDeleteSuccess={handleDeleteSuccess}
+              />
+            </div>
           </div>
-        </div>
-      )}
+          )}
 
-      {selectedFlight !== null && isEdit && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
-          onClick={handleEditClose}
-        >
-          <div onClick={(event) => event.stopPropagation()}>
-            <UpdateFlightDetailsCard
-              flight={selectedFlight}
-              onClose={handleEditClose}
-              onSuccess={handleEditSuccess}
-            />
+        {selectedFlight !== null && isEdit && (
+          <div
+            className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 px-4 py-8 backdrop-blur-sm"
+            onClick={handleEditClose}
+          >
+            <div onClick={(event) => event.stopPropagation()}>
+              <UpdateFlightDetailsCard
+                flight={selectedFlight}
+                onClose={handleEditClose}
+                onSuccess={handleEditSuccess}
+              />
+            </div>
           </div>
-        </div>
-      )}
+          )}
+
     </div>
   );
 }

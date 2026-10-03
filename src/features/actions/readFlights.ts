@@ -1,103 +1,185 @@
 "use server";
 
 import { createClient } from "@/src/lib/supabase/server";
-import { uuidSchema, FlightSchema } from "@/src/schemas/flightSchemas";
-import type { Criteria, Order, Search } from "@/src/schemas/flightSchemas";
-interface fetchFlightsParams { 
-criteria: Criteria;
-order: Order;
-search: Search;
+import {
+    uuidSchema,
+    FlightSchema,
+    type Criteria,
+    type Order,
+    type Search,
+    type UUID,
+} from "@/src/schemas/flightSchemas";
+import type { SupabaseClient } from "@supabase/supabase-js";
+
+
+export type ReadFlightParams = {
+    supabase: SupabaseClient<any, "public", "public", any, any>;
+    userId: UUID;
+    criteria: Criteria;
+    order: Order;
+    search: Search;
 };
 
-export async function fetchFlights( { order, criteria, search} :fetchFlightsParams ) {
 
-  const supabase = await createClient();
+export type ReadFlightByIdParams = {
+    supabase: SupabaseClient<any, "public", "public", any, any>;
+    flightId: UUID;
+    userId: UUID;
+};
 
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) throw new Error("Unauthorized!");
+export async function readAllFlights({
+    supabase,
+    userId,
+    order = "newest",
+    criteria = null,
+    search = null,
+}: ReadFlightParams) {
 
-  const userId = uuidSchema.parse(user.id);
+    const columns = [
+        "flight_number",
+        "registration",
+        "airline",
+        "aircraft_type",
+        "departure",
+        "arrival",
+        "notes",
+    ];
 
-  const columns = ['flight_number', 'registration', 'airline', 'aircraft_type', 'departure', 'arrival', 'notes']
+    let query = supabase
+        .from("flights")
+        .select("*")
+        .eq("user_id", userId);
 
-  let query = supabase
-  .from('flights')
-  .select('*')
-  .eq('user_id', userId)
+    if (order === "oldest") {
+        query = query.order("created_at", { ascending: true });
+    } else {
+        query = query.order("created_at", { ascending: false });
+    }
 
-  if (order === 'oldest') {
-    query = query.order('created_at', { ascending: true })
-  } else {
-    query = query.order('created_at', { ascending: false })
-  }
-    
-  if (criteria) {
-    query = query.not( criteria, 'is', null );
-  }
+    if (criteria) {
+        query = query.not(criteria, "is", null);
+    }
 
-  if (search) {
-    const filterString = columns.map((col) => `${col}.ilike.%${search}%`).join(",")
-    query = query.or(filterString);
-  }
+    if (search) {
+        const filterString = columns
+            .map((column) => `${column}.ilike.%${search}%`)
+            .join(",");
 
-  const { data, error } = await query;
+        query = query.or(filterString);
+    }
 
-  if (error) {
-    console.error("Error fetching stats:", error.message);
-    throw new Error(error.message);
-  }
+    const { data, error } = await query;
 
-  const flightData = FlightSchema.array().parse(data);    
-  return flightData;
+    if (error) {
+        throw new Error(error.message);
+    }
+
+    return FlightSchema.array().parse(data);
 }
+
+
+export async function readFlightById({
+    supabase,
+    flightId,
+    userId,
+}: ReadFlightByIdParams) {
+
+    return await supabase
+        .from("flights")
+        .select("*")
+        .eq("id", flightId)
+        .eq("user_id", userId)
+        .maybeSingle();
+}
+
+
+export async function getFlightStats({
+    supabase,
+}: {
+    supabase: SupabaseClient<any, "public", "public", any, any>;
+}) {
+    return await supabase.rpc("get_user_flight_stats");
+}
+
+
+export async function fetchFlights({
+    order,
+    criteria,
+    search,
+}: {
+    order: Order;
+    criteria: Criteria;
+    search: Search;
+}) {
+
+    const supabase = await createClient();
+
+    const {
+        data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+        throw new Error("Unauthorized!");
+    }
+
+    return await readAllFlights({
+        supabase,
+        userId: uuidSchema.parse(user.id),
+        order,
+        criteria,
+        search,
+    });
+}
+
 
 export async function fetchFlightsById(flightId: string) {
 
     const supabase = await createClient();
-    const Id = uuidSchema.parse(flightId);
 
-    const {data: {user} } = await supabase.auth.getUser();
-    if (!user) throw new Error("Unauthorised!");
+    const id = uuidSchema.parse(flightId);
+
+    const {
+        data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+        throw new Error("Unauthorised!");
+    }
+
     const userId = uuidSchema.parse(user.id);
 
-    const {data: flightData , error } = await supabase
-    .from('flights')
-    .select('*')
-    .eq('id', Id)
-    .eq('user_id', userId)
-    .maybeSingle();
+    const { data, error } = await readFlightById({
+        supabase,
+        flightId: id,
+        userId,
+    });
 
     if (error) {
         console.log(error);
         return null;
-    } 
-    return flightData;
-};
+    }
 
-
-export async function fetchFlightStats() {
-
-  const supabase = await createClient();
-  
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) throw new Error("Unauthorized!");
-  
-  const userId = uuidSchema.parse(user.id);
-  
-  const { data, error } = await supabase.rpc('get_user_flight_stats', {
-    target_user_id: userId
-  });
-  
-  if (error) {
-    console.error("Error fetching stats:", error.message);
-    throw new Error(error.message);
-  }
-
-  return data; 
+    return data;
 }
 
 
+export async function fetchFlightStats() {
+    const supabase = await createClient();
 
+    const {
+        data: { user },
+    } = await supabase.auth.getUser();
 
+    if (!user) throw new Error("Unauthorized!");
 
+    const { data, error } = await getFlightStats({
+        supabase,
+    });
 
+    if (error) {
+        console.error("Error fetching stats:", error.message);
+        throw new Error(error.message);
+    }
+
+    return data;
+}

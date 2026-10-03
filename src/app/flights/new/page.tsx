@@ -26,9 +26,7 @@ export default function NewFlightForm() {
   const [state, formAction, isPending] = useActionState(createFlight, initialState);
 
   useEffect (() => {
-    console.log('EFFECT RAN:', state.status);
     if(state.status === 'error') {
-      console.log('ERROR BRANCH')
       toast.add({
             type: "error",
             description: "Flight could not be created.",
@@ -36,7 +34,6 @@ export default function NewFlightForm() {
     })}
 
     if(state.status === 'success') {
-      console.log('SUCCESS BRANCH');
       toast.add({
             type: "success",
             description: "Flight has been created.",
