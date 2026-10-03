@@ -22,6 +22,7 @@ function log(
   event: string,
   message: string,
   context?: LogContext,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   error?: any
 ): LogEntry {
 
@@ -73,6 +74,8 @@ export const logger = {
     event: string,
     message: string,
     context?: LogContext,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     error?: any
   ) => log("error", event, message, context, error),
 };
+

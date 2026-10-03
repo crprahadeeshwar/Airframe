@@ -78,8 +78,15 @@ export async function readAllFlights({
     const { data, error } = await query;
 
     if (error) {
-        throw new Error(error.message);
-    }
+    logger.error(
+        "flight.read.failed",
+        "Failed to read flights",
+        { userId },
+        error
+    );
+
+    throw new Error(error.message);
+}
 
     return FlightSchema.array().parse(data);
 }
@@ -107,8 +114,15 @@ export async function getFlightStats({
 }) {
     const { data, error } = await supabase.rpc("get_user_flight_stats");
     if (error) {
-        return { data: null, error };
-    }
+    logger.error(
+        "flight.stats.failed",
+        "Failed to fetch flight statistics",
+        undefined,
+        error
+    );
+
+    return { data: null, error };
+}
 
     const stats = data?.[0];
 
@@ -118,11 +132,19 @@ export async function getFlightStats({
         typeof stats.aircraft_count !== "number" ||
         typeof stats.airline_count !== "number"
     ) {
+        const invalidStatsError = new Error("Invalid flight stats response");
+
+        logger.error(
+            "flight.stats.failed",
+            "Invalid flight stats response",
+            undefined,
+            invalidStatsError
+            );
         return {
             data: null,
-            error: new Error("Invalid flight stats response"),
+            error: invalidStatsError,
         };
-    }
+        }
 
     return {
         data: stats as FlightStats,
@@ -183,9 +205,14 @@ export async function fetchFlightsById(flightId: string) {
     });
 
     if (error) {
-        console.log(error);
-        return null;
-    }
+    logger.error(
+        "flight.read.failed",
+        "Failed to read flight",
+        { flightId, userId },
+        error
+    );
+    return null;
+}
 
     return data;
 }
@@ -205,7 +232,6 @@ export async function fetchFlightStats() {
     });
 
     if (error) {
-        console.error("Error fetching stats:", error.message);
         throw new Error(error.message);
     }
 
