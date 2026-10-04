@@ -45,17 +45,14 @@ The postgreSQL database, as mentioned above, stores user and flight records. On 
 
 ## Environment Variables
 
-Airframe keeps environment-specific configuration outside the
-source code.
+Airframe keeps environment-specific configuration outside the source code.
 
-Local development values will be stored in `.env.local`, which
-must not be committed to Git.
+Local development values will be stored in `.env.local`, which must not be committed to Git.
 
-Public configuration may use the `NEXT_PUBLIC_` prefix when it is
-intended to be available to browser-side code.
+Values needed for testing, like the server role key, are stored in `.env.test.local` and similarly must not be committed to Git.
 
-Secrets and privileged credentials must remain server-side and
-must never be exposed to the browser.
+Public configuration may use the `NEXT_PUBLIC_` prefix when it is intended to be available to browser-side code.
 
-Production environment variables will be configured through the
-deployment platform rather than committed to the repository.
+Secrets and privileged credentials must remain server-side and must never be exposed to the browser.
+
+Production environment variables will be configured through the deployment platform (here, Vercel) rather than committed to the repository.
