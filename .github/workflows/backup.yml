@@ -1,0 +1,77 @@
+name: Database Backup
+
+on:
+  schedule:
+    # 00:00 IST every day = 18:30 UTC
+    - cron: "30 18 * * *"
+  workflow_dispatch:
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+
+    env:
+      SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+      R2_ENDPOINT: https://${{ secrets.R2_ACCOUNT_ID }}.r2.cloudflarestorage.com
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Create database dump
+        run: |
+          supabase db dump \
+            --db-url "$SUPABASE_DB_URL" \
+            -f airframe-backup.sql
+
+      - name: Configure R2 credentials
+        run: |
+          aws configure set aws_access_key_id \
+            "${{ secrets.R2_ACCESS_KEY_ID }}" \
+            --profile airframe-r2
+
+          aws configure set aws_secret_access_key \
+            "${{ secrets.R2_SECRET_ACCESS_KEY }}" \
+            --profile airframe-r2
+
+          aws configure set region auto \
+            --profile airframe-r2
+
+      - name: Upload backup to R2
+        run: |
+          DATE=$(date -u +%Y-%m-%d)
+
+          aws s3 cp airframe-backup.sql \
+            "s3://airframe-backups/daily/${DATE}.sql" \
+            --profile airframe-r2 \
+            --endpoint-url "$R2_ENDPOINT"
+
+          aws s3 cp airframe-backup.sql \
+            "s3://airframe-backups/latest.sql" \
+            --profile airframe-r2 \
+            --endpoint-url "$R2_ENDPOINT"
+
+      - name: Verify backup
+        run: |
+          DATE=$(date -u +%Y-%m-%d)
+
+          aws s3api head-object \
+            --bucket airframe-backups \
+            --key "daily/${DATE}.sql" \
+            --profile airframe-r2 \
+            --endpoint-url "$R2_ENDPOINT"
+
+          aws s3api head-object \
+            --bucket airframe-backups \
+            --key latest.sql \
+            --profile airframe-r2 \
+            --endpoint-url "$R2_ENDPOINT"
+
+      - name: Remove local backup
+        if: always()
+        run: rm -f airframe-backup.sql
