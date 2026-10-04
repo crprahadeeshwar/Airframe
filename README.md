@@ -190,11 +190,14 @@ Manual database dumps are also supported:
 
 ```bash
 npx supabase db dump -f airframe-backup.sql
+
 ```
 
-Backup and recovery procedures are still being finalized. A full restore drill and durable off-site backup process are planned before Airframe is considered fully production-ready.
+Daily database backups are automated through GitHub Actions and stored in a private Cloudflare R2 bucket.
 
-See [`docs/recovery.md`](docs/recovery.md) once the recovery workflow is finalized.
+Backups are stored as both the latest snapshot and dated daily snapshots.
+
+A full restore drill and recovery procedure are still being finalized. See docs/recovery.md⁠￼ for the recovery documentation.
 
 ## Documentation
 
