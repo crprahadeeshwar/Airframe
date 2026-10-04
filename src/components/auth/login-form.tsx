@@ -1,11 +1,13 @@
 "use client"
 
+import { useActionState } from "react"
 import { cn } from "cn"
 
 import { Button } from "./auth-ui/button"
 import {
   Field,
   FieldDescription,
+  FieldError,
   FieldGroup,
   FieldLabel,
   FieldSeparator,
@@ -13,15 +15,24 @@ import {
 import { Input } from "./auth-ui/input"
 import { GalleryVerticalEndIcon } from "lucide-react"
 import { login } from "@/src/features/actions/auth/login"
+import type { FormState } from "@/src/schemas/flightSchemas"
 
+const initialState: FormState = {
+  status: "idle",
+  errorMessage: "",
+  errorType: "none",
+}
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const [state, formAction] = useActionState(login, initialState)
+  const credentialsInvalid = state.status === "error"
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <form action={login}>
+      <form action={formAction}>
         <FieldGroup>
           <div className="flex flex-col items-center gap-2 text-center">
             <a
@@ -38,7 +49,7 @@ export function LoginForm({
               Don&apos;t have an account? <a href="/signup">Sign up</a>
             </FieldDescription>
           </div>
-          <Field>
+          <Field data-invalid={credentialsInvalid || undefined}>
             <FieldLabel htmlFor="email">Email</FieldLabel>
             <Input
               id="email"
@@ -46,17 +57,22 @@ export function LoginForm({
               name="email"
               placeholder="m@example.com"
               required
+              aria-invalid={credentialsInvalid}
             />
           </Field>
-          <Field>
+          <Field data-invalid={credentialsInvalid || undefined}>
             <FieldLabel htmlFor="password">Password</FieldLabel>
             <Input
               id="password"
               type="password"
               name="password"
               required
+              aria-invalid={credentialsInvalid}
             />
           </Field>
+          {credentialsInvalid && (
+            <FieldError>{state.errorMessage}</FieldError>
+          )}
           <Field>
             <Button type="submit">Login</Button>
           </Field>

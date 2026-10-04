@@ -2,10 +2,14 @@
 
 import { createClient } from "@/src/lib/supabase/server";
 import { redirect } from "next/navigation";
-import { EmailSchema, PasswordSchema } from "@/src/schemas/flightSchemas";
+import { EmailSchema, PasswordSchema, type FormState } from "@/src/schemas/flightSchemas";
 import { logger } from "@/src/lib/logger";
 
-export async function login(formData: FormData) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- required by useActionState signature
+export async function login(
+    prevState: FormState,
+    formData: FormData
+): Promise<FormState> {
 
     const supabase = await createClient();
 
@@ -25,7 +29,11 @@ export async function login(formData: FormData) {
             error
         );
 
-        redirect(`/login?error=${encodeURIComponent(error.message)}`);
+        return {
+            status: "error",
+            errorMessage: "Invalid email or password.",
+            errorType: "operation",
+        };
     }
 
     logger.info(
