@@ -5,7 +5,6 @@ import { redirect } from "next/navigation";
 import { EmailSchema, stringSchema, type AuthFormState } from "@/src/schemas/flightSchemas";
 import { logger } from "@/src/lib/logger";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- required by useActionState signature
 export async function login(
     prevState: AuthFormState,
     formData: FormData

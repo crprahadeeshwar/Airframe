@@ -1,5 +1,6 @@
-import { LegalPage } from "@/src/components/legal/legalPage";
+import { LegalPage } from "@/src/components/legal/LegalPage";
 
+/* eslint-disable react/no-unescaped-entities */
 export default function TermsOfServicePage() {
   return (
     <LegalPage

@@ -15,7 +15,7 @@ import { Input } from "./auth-ui/input"
 import { GalleryVerticalEndIcon } from "lucide-react"
 import { signup } from "@/src/features/actions/auth/signup"
 import { AuthFormState } from "@/src/schemas/flightSchemas"
-import { useActionState, useState } from "react"
+import { useActionState } from "react"
 
 const initialState: AuthFormState = {
   field: { email: "" },
@@ -83,7 +83,7 @@ export function SignupForm({
           {signupError&& (
             <FieldError>{state.errorMessage}</FieldError>
           )}
-          
+
           <Field>
 
             <Button type="submit">Create Account</Button>
