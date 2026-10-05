@@ -4,7 +4,6 @@ import { createClient } from "@/src/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { EmailSchema, PasswordSchema, AuthFormState } from "@/src/schemas/flightSchemas";
 import { logger } from "@/src/lib/logger";
-import { success } from "zod";
 
 export async function signup(
     prevState: AuthFormState,

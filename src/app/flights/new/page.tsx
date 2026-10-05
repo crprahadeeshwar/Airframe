@@ -67,7 +67,6 @@ export default function NewFlightForm() {
               <input
                 type="text"
                 name="flight_number"
-                placeholder="EK525"
                 className="rounded-md border bg-background px-3 py-2"
               />
             </label>
@@ -98,7 +97,6 @@ export default function NewFlightForm() {
               <input
                 type="text"
                 name="airline"
-                placeholder="Emirates"
                 className="rounded-md border bg-background px-3 py-2"
               />
             </label>
@@ -108,7 +106,6 @@ export default function NewFlightForm() {
               <input
                 type="text"
                 name="aircraft_type"
-                placeholder="B777-300ER"
                 className="rounded-md border bg-background px-3 py-2"
               />
             </label>
@@ -127,7 +124,6 @@ export default function NewFlightForm() {
               <input
                 type="text"
                 name="registration"
-                placeholder="A6-EQH"
                 className="rounded-md border bg-background px-3 py-2"
               />
             </label>
@@ -146,7 +142,6 @@ export default function NewFlightForm() {
               <input
                 type="text"
                 name="departure"
-                placeholder="HYD"
                 className="rounded-md border bg-background px-3 py-2"
               />
             </label>
@@ -160,7 +155,6 @@ export default function NewFlightForm() {
               <input
                 type="text"
                 name="arrival"
-                placeholder="DXB"
                 className="rounded-md border bg-background px-3 py-2"
               />
             </label>
