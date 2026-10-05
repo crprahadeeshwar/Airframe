@@ -1,6 +1,9 @@
+'use client'
+
 import FlightTableHeader from "./flightTableHeader";
 import DashTableRow from "./dashTableRow";
 import type { FlightTypeSchema } from "@/src/schemas/flightSchemas";
+import { useRouter } from "next/navigation";
 
 interface DashTableProps {
   flightDataArray: FlightTypeSchema[];
@@ -9,8 +12,14 @@ interface DashTableProps {
 export default function DashTable({
   flightDataArray,
 }: DashTableProps) {
+
+  const router = useRouter();
+  const handleOnClick = () => {
+    router.push('/flights')
+  }
+  
   return (
-    <section className="overflow-hidden rounded-xl border bg-background shadow-sm">
+    <section className="overflow-hidden rounded-xl border bg-background shadow-sm" onClick={handleOnClick}>
       <div className="border-b px-4 py-4">
         <h2 className="text-sm font-semibold">
           Recent Flights

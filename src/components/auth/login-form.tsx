@@ -16,6 +16,7 @@ import { Input } from "./auth-ui/input"
 import { GalleryVerticalEndIcon } from "lucide-react"
 import { login } from "@/src/features/actions/auth/login"
 import type { AuthFormState } from "@/src/schemas/flightSchemas"
+import { loginWithGoogle } from "@/src/features/actions/auth/googleLogin"
 
 const initialState: AuthFormState = {
   field: { email: ""},
@@ -87,7 +88,11 @@ export function LoginForm({
           <Field>
             <Button type="submit">Login</Button>
           </Field>
+          </FieldGroup>
+          </form>
           <FieldSeparator>Or</FieldSeparator>
+          <form action={loginWithGoogle}>
+          <FieldGroup>
           <Field className="grid gap-4 sm:grid-cols-1">
             <Button variant="outline" type="button">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -99,8 +104,8 @@ export function LoginForm({
               Continue with Google
             </Button>
           </Field>
-        </FieldGroup>
-      </form>
+          </FieldGroup>
+          </form>
       <FieldDescription className="px-6 text-center">
         By clicking continue, you agree to our <a href="/legal/terms_of_service">Terms of Service</a>{" "}
         and <a href="/legal/privacy_policy">Privacy Policy</a>.
