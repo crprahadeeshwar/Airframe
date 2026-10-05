@@ -19,9 +19,12 @@ export default async function FlightsPage({ searchParams }: PageProps) {
     const flightDataArray = await fetchFlights(query);
 
     return (
-        <div className="flex items-center">
-            <Sidebar />
+        <div className="flex min-h-screen w-full"> 
+                <Sidebar />
+              
+            <main className="flex-1 w-full p-6">
             <FlightContent flightDataArrayProps={flightDataArray} />
+            </main>
         </div>
     );
 }

@@ -3,9 +3,12 @@ import DashboardContent from "@/src/components/shared/dashContent/dashContent";
 
 export default function DashboardPage() {
     return (
-        <div className="flex items-center">
-        <Sidebar/>
+    <div className="flex min-h-screen w-full"> 
+        <Sidebar />
+      
+        <main className="flex-1 w-full p-6">
         <DashboardContent/>
-        </div>
+        </main>
+    </div>
     );
 }
