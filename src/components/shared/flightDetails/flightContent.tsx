@@ -88,7 +88,7 @@ export default function FlightContent({
 
         {selectedFlight !== null && !isEdit && (
           <div
-            className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 px-4 py-8 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/50 px-4 py-8 backdrop-blur-sm"
             onClick={handleDetailsClose}
           >
             <div onClick={(event) => event.stopPropagation()}>

@@ -15,9 +15,13 @@ export default function Home() {
       <header className="border-b">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
           <Link href="/" className="flex items-center gap-2 font-semibold">
-            <div className="flex size-8 items-center justify-center rounded-lg border bg-muted">
-              <Plane className="size-4" />
-            </div>
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg">
+            <img
+              src="/airframe.svg"
+              alt=""
+              className="h-5 w-5"
+            />
+          </div>
             <span>Airframe</span>
           </Link>
 
@@ -85,9 +89,13 @@ export default function Home() {
                 <aside className="hidden border-r bg-muted/30 md:flex md:flex-col">
                   <div className="border-b px-5 py-5">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-foreground text-background">
-                        ✈
-                      </div>
+                      <div className="flex h-9 w-9 items-center justify-center rounded-lg">
+                      <img
+                        src="/airframe.svg"
+                        alt=""
+                        className="h-5 w-5"
+                      />
+                    </div>
 
                       <div>
                         <div className="text-sm font-semibold tracking-tight">
@@ -107,12 +115,12 @@ export default function Home() {
                     </p>
 
                     <div className="space-y-1 text-xs">
-                      <div className="flex items-center gap-3 rounded-lg bg-muted px-3 py-2.5 font-medium">
+                      <div className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-muted-foreground">
                         <LayoutDashboard className="size-3.5" />
                         Dashboard
                       </div>
 
-                      <div className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-muted-foreground">
+                      <div className="flex items-center gap-3 rounded-lg bg-muted px-3 py-2.5 font-medium">
                         <Plane className="size-3.5" />
                         Flights
                       </div>
@@ -218,7 +226,6 @@ export default function Home() {
       {/* Final CTA */}
       <section className="border-t">
         <div className="mx-auto max-w-4xl px-6 py-24 text-center">
-          <Plane className="mx-auto size-7" />
 
           <h2 className="mt-5 text-3xl font-bold tracking-tight sm:text-4xl">
             Start building your flight history.

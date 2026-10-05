@@ -16,8 +16,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Airframe",
-  description: "A personal flight log.",
+  title: { 
+    default: "Airframe",
+    template: "%s | Airframe",
+  },
+  description: "Keep track of your flights and travel history.",
 };
 
 // Replace LayoutProps<"/"> with explicit React props:

@@ -20,7 +20,7 @@ interface FlightDetailsCardProps {
 export default function FlightDetailsCard({ flightData, onClose, openEdit, onDeleteSuccess } : FlightDetailsCardProps) {
 
   return (
-    <Card className="m-4 w-full max-w-2xl">
+    <Card className="w-full max-w-2xl">
       
       <CardHeader className="relative border-b">
         <CardTitle className="text-center text-2xl">
