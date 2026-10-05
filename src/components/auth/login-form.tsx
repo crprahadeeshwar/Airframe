@@ -15,9 +15,10 @@ import {
 import { Input } from "./auth-ui/input"
 import { GalleryVerticalEndIcon } from "lucide-react"
 import { login } from "@/src/features/actions/auth/login"
-import type { FormState } from "@/src/schemas/flightSchemas"
+import type { AuthFormState } from "@/src/schemas/flightSchemas"
 
-const initialState: FormState = {
+const initialState: AuthFormState = {
+  field: { email: ""},
   status: "idle",
   errorMessage: "",
   errorType: "none",
@@ -28,11 +29,13 @@ export function LoginForm({
   ...props
 }: React.ComponentProps<"div">) {
   const [state, formAction] = useActionState(login, initialState)
-  const credentialsInvalid = state.status === "error"
+  const emailInvalid = state.errorMessage === "invalid.email"
+  const passwordInvalid = state.errorMessage === "invalid.password"
+  const loginError = state.errorType === "operation"
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <form action={formAction}>
+      <form action={formAction} key={state?.field?.email || "initial-email"}>
         <FieldGroup>
           <div className="flex flex-col items-center gap-2 text-center">
             <a
@@ -49,30 +52,38 @@ export function LoginForm({
               Don&apos;t have an account? <a href="/signup">Sign up</a>
             </FieldDescription>
           </div>
-          <Field data-invalid={credentialsInvalid || undefined}>
+
+          <Field 
+            data-invalid={(emailInvalid || undefined) && emailInvalid}
+          >
             <FieldLabel htmlFor="email">Email</FieldLabel>
             <Input
               id="email"
               type="email"
               name="email"
-              placeholder="m@example.com"
               required
-              aria-invalid={credentialsInvalid}
+              defaultValue={state?.field?.email ?? ""}
+              aria-invalid={emailInvalid}
             />
+            {state.status !== 'idle' && emailInvalid && (<FieldError>Enter a valid email address.</FieldError>)}
           </Field>
-          <Field data-invalid={credentialsInvalid || undefined}>
+
+          <Field data-invalid={(passwordInvalid || undefined) && passwordInvalid}>
             <FieldLabel htmlFor="password">Password</FieldLabel>
             <Input
               id="password"
               type="password"
               name="password"
               required
-              aria-invalid={credentialsInvalid}
+              aria-invalid={passwordInvalid}
             />
+            {state.status !== 'idle' &&  passwordInvalid && (<FieldError>Enter a valid password.</FieldError>)}
           </Field>
-          {credentialsInvalid && (
+
+          {loginError && (
             <FieldError>{state.errorMessage}</FieldError>
           )}
+          
           <Field>
             <Button type="submit">Login</Button>
           </Field>
