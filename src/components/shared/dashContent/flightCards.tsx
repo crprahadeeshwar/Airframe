@@ -8,7 +8,7 @@ export default function FlightCard({
   metric,
 }: FlightCardsProps) {
   return (
-    <div className="rounded-xl border bg-background p-5 shadow-sm">
+    <div className="rounded-xl border bg-background p-4 shadow-sm sm:p-5">
       <div className="text-sm font-medium text-muted-foreground">
         {title}
       </div>

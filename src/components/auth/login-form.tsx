@@ -162,7 +162,7 @@ export function LoginForm({
         <a href="/legal/privacy_policy">
           Privacy Policy
         </a>
-        .
+        
       </FieldDescription>
     </div>
   )

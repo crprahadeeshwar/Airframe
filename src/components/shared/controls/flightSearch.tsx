@@ -4,6 +4,7 @@ import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 
+
 export default function Search() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -36,7 +37,7 @@ export default function Search() {
   };
 
   return (
-    <div className="relative w-full sm:max-w-sm">
+    <div className="w-full">
       <input
         type="search"
         value={text}

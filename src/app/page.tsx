@@ -7,6 +7,7 @@ import {
   LayoutDashboard,
   ShieldCheck,
 } from "lucide-react"
+import Image from "next/image"
 
 export default function Home() {
   return (
@@ -16,9 +17,11 @@ export default function Home() {
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
           <Link href="/" className="flex items-center gap-2 font-semibold">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg">
-            <img
+            <Image
               src="/airframe.svg"
               alt=""
+              width={20}
+              height={20}
               className="h-5 w-5"
             />
           </div>
@@ -84,18 +87,20 @@ export default function Home() {
           {/* Product preview */}
           <div className="mt-20 w-full max-w-5xl">
             <div className="overflow-hidden rounded-xl border bg-background text-left shadow-2xl">
-              <div className="grid min-h-[420px] grid-cols-[180px_1fr]">
+              <div className="min-h-[360px] sm:min-h-[420px] md:grid md:grid-cols-[180px_1fr]">
                 {/* Sidebar */}
                 <aside className="hidden border-r bg-muted/30 md:flex md:flex-col">
                   <div className="border-b px-5 py-5">
                     <div className="flex items-center gap-3">
                       <div className="flex h-9 w-9 items-center justify-center rounded-lg">
-                      <img
-                        src="/airframe.svg"
-                        alt=""
-                        className="h-5 w-5"
-                      />
-                    </div>
+                        <Image
+                          src="/airframe.svg"
+                          alt=""
+                          width={20}
+                          height={20}
+                          className="h-5 w-5"
+                        />
+                      </div>
 
                       <div>
                         <div className="text-sm font-semibold tracking-tight">
@@ -129,12 +134,14 @@ export default function Home() {
                 </aside>
 
                 {/* Main content */}
-                <div className="overflow-hidden p-6 sm:p-8">
-                  <div className="mb-7">
-                    <p className="text-xs text-muted-foreground">Flight history</p>
+                <div className="min-w-0 overflow-hidden p-4 sm:p-6 md:p-8">
+                  <div className="mb-6 sm:mb-7">
+                    <p className="text-xs text-muted-foreground">
+                      Flight history
+                    </p>
 
-                    <div className="mt-1 flex items-center justify-between">
-                      <h2 className="text-xl font-semibold tracking-tight">
+                    <div className="mt-1 flex items-center justify-between gap-4">
+                      <h2 className="text-lg font-semibold tracking-tight sm:text-xl">
                         Your Flights
                       </h2>
 
@@ -144,8 +151,49 @@ export default function Home() {
                     </div>
                   </div>
 
-                  {/* Flight table */}
-                  <div className="overflow-hidden rounded-xl border">
+                  {/* Mobile preview */}
+                  <div className="space-y-2 sm:hidden">
+                    {[
+                      ["AI 101", "Air India", "DEL", "LHR", "B787", "Sep 28"],
+                      ["6E 204", "IndiGo", "HYD", "DEL", "A320", "Sep 14"],
+                      ["SQ 423", "Singapore", "DEL", "SIN", "A350", "Aug 31"],
+                      ["EK 526", "Emirates", "HYD", "DXB", "B777", "Aug 12"],
+                    ].map(([flight, airline, from, to, aircraft, date]) => (
+                      <div
+                        key={flight}
+                        className="rounded-lg border px-3 py-3"
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="min-w-0">
+                            <p className="text-xs font-medium">
+                              {flight}
+                            </p>
+
+                            <p className="mt-1 truncate text-[10px] text-muted-foreground">
+                              {airline}
+                            </p>
+                          </div>
+
+                          <span className="shrink-0 text-[10px] text-muted-foreground">
+                            {date}
+                          </span>
+                        </div>
+
+                        <div className="mt-2 flex items-center gap-2 text-xs">
+                          <span className="font-medium">{from}</span>
+                          <span className="text-muted-foreground">→</span>
+                          <span className="font-medium">{to}</span>
+                        </div>
+
+                        <p className="mt-2 text-[10px] text-muted-foreground">
+                          {aircraft}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Desktop preview */}
+                  <div className="hidden overflow-hidden rounded-xl border sm:block">
                     <div className="grid grid-cols-6 gap-3 border-b bg-muted/40 px-4 py-3 text-[9px] font-medium uppercase tracking-wide text-muted-foreground">
                       <span>Date</span>
                       <span>Flight</span>

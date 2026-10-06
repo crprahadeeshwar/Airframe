@@ -9,37 +9,79 @@ export default function FlightTableRow({
   flight,
   onFlightSelect,
 }: FlightTableRowProps) {
+  const formattedDate = flight.date
+    ? flight.date.toISOString().split("T")[0]
+    : "—";
+
   return (
     <button
       type="button"
       onClick={() => onFlightSelect(flight)}
-      className="grid w-full grid-cols-6 gap-4 border-b px-4 py-3 text-left text-sm transition-colors last:border-b-0 hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
+      className="w-full border-b text-left transition-colors last:border-b-0 hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
     >
-      <span className="text-muted-foreground">
-        {flight.date
-          ? flight.date.toISOString().split("T")[0]
-          : "—"}
-      </span>
+      {/* Mobile */}
+      <div className="flex flex-col gap-3 px-4 py-4 sm:hidden">
+        <div className="flex items-start justify-between gap-4">
+          <div className="min-w-0">
+            <p className="font-medium">
+              {flight.flight_number ?? "—"}
+            </p>
 
-      <span className="font-medium">
-        {flight.flight_number ?? "—"}
-      </span>
+            <p className="mt-1 truncate text-sm text-muted-foreground">
+              {flight.airline ?? "—"}
+            </p>
+          </div>
 
-      <span className="text-muted-foreground">
-        {flight.aircraft_type ?? "—"}
-      </span>
+          <span className="shrink-0 text-xs text-muted-foreground">
+            {formattedDate}
+          </span>
+        </div>
 
-      <span>
-        {flight.departure ?? "—"}
-      </span>
+        <div className="flex items-center gap-2">
+          <span className="font-medium">
+            {flight.departure ?? "—"}
+          </span>
 
-      <span>
-        {flight.arrival ?? "—"}
-      </span>
+          <span className="text-muted-foreground">
+            →
+          </span>
 
-      <span className="text-muted-foreground">
-        {flight.airline ?? "—"}
-      </span>
+          <span className="font-medium">
+            {flight.arrival ?? "—"}
+          </span>
+        </div>
+
+        <span className="text-xs text-muted-foreground">
+          {flight.aircraft_type ?? "—"}
+        </span>
+      </div>
+
+      {/* Desktop */}
+      <div className="hidden grid-cols-6 gap-4 px-4 py-3 text-sm sm:grid">
+        <span className="text-muted-foreground">
+          {formattedDate}
+        </span>
+
+        <span className="font-medium">
+          {flight.flight_number ?? "—"}
+        </span>
+
+        <span className="text-muted-foreground">
+          {flight.aircraft_type ?? "—"}
+        </span>
+
+        <span>
+          {flight.departure ?? "—"}
+        </span>
+
+        <span>
+          {flight.arrival ?? "—"}
+        </span>
+
+        <span className="text-muted-foreground">
+          {flight.airline ?? "—"}
+        </span>
+      </div>
     </button>
   );
 }

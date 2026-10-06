@@ -16,10 +16,13 @@ export default function FlightTable({
       <FlightTableHeader />
 
       {flightDataArray.length === 0 ? (
-        <div className="flex min-h-48 items-center justify-center px-6">
-          <div className="text-center">
-            <p className="text-sm font-medium">No flights yet</p>
-            <p className="mt-1 text-sm text-muted-foreground">
+        <div className="flex min-h-40 items-center justify-center px-5 py-8 sm:min-h-48 sm:px-6">
+          <div className="max-w-sm text-center">
+            <p className="text-sm font-medium">
+              No flights yet
+            </p>
+
+            <p className="mt-1 text-sm leading-6 text-muted-foreground">
               Add your first flight to start building your travel history.
             </p>
           </div>
