@@ -7,8 +7,12 @@ import { logger } from "@/src/lib/logger";
 export async function loginWithGoogle() {
     const supabase = await createClient();
 
-    const siteUrl =
-        process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+   const siteUrl =
+    process.env.VERCEL_ENV === "production"
+        ? process.env.NEXT_PUBLIC_SITE_URL!
+        : process.env.NEXT_PUBLIC_VERCEL_URL
+            ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+            : "http://localhost:3000";
 
     const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "google",
