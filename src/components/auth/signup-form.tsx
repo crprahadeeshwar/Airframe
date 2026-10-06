@@ -12,11 +12,11 @@ import {
   FieldError
 } from "./auth-ui/field"
 import { Input } from "./auth-ui/input"
-import { GalleryVerticalEndIcon } from "lucide-react"
 import { signup } from "@/src/features/actions/auth/signup"
 import { AuthFormState } from "@/src/schemas/flightSchemas"
 import { useActionState } from "react"
 import { loginWithGoogle } from "@/src/features/actions/auth/googleLogin"
+import Image from "next/image"
 
 const initialState: AuthFormState = {
   field: { email: "" },
@@ -54,8 +54,14 @@ export function SignupForm({
               className="flex flex-col items-center gap-2 font-medium"
             >
               <div className="flex size-8 items-center justify-center rounded-md">
-                <GalleryVerticalEndIcon className="size-6" />
-              </div>
+              <Image
+                        src="/airframe.svg"
+                        alt="Airframe"
+                        width={24}
+                        height={24}
+                        className="size-6"
+                      />             
+                </div>
 
               <span className="sr-only">Airframe.</span>
             </a>
