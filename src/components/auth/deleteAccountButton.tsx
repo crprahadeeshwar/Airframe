@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useState } from "react";
 import { Trash2 } from "lucide-react";
 
 import {
@@ -37,12 +37,6 @@ export function DeleteAccountButton() {
     deleteAccount,
     initialState
   );
-
-  useEffect(() => {
-    if (state.status === "error") {
-      setOpen(false);
-    }
-  }, [state.status]);
 
   const canDelete = confirmation === "DELETE";
 
@@ -103,6 +97,12 @@ export function DeleteAccountButton() {
               className="h-10 w-full rounded-md border bg-background px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
               disabled={isPending}
             />
+
+            {state.status === "error" && (
+              <p className="text-sm text-destructive">
+                {state.message}
+              </p>
+            )}
           </div>
 
           <AlertDialogFooter>
