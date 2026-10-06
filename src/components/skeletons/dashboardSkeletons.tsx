@@ -9,20 +9,15 @@ function SkeletonBlock({ className = "" }: { className?: string }) {
 export function DashboardMetricsSkeleton() {
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      <div className="rounded-xl border bg-background p-5 shadow-sm">
-        <SkeletonBlock className="h-4 w-20" />
-        <SkeletonBlock className="mt-3 h-9 w-14" />
-      </div>
-
-      <div className="rounded-xl border bg-background p-5 shadow-sm">
-        <SkeletonBlock className="h-4 w-20" />
-        <SkeletonBlock className="mt-3 h-9 w-14" />
-      </div>
-
-      <div className="rounded-xl border bg-background p-5 shadow-sm">
-        <SkeletonBlock className="h-4 w-20" />
-        <SkeletonBlock className="mt-3 h-9 w-14" />
-      </div>
+      {Array.from({ length: 3 }).map((_, index) => (
+        <div
+          key={index}
+          className="rounded-xl border bg-background p-4 shadow-sm sm:p-5"
+        >
+          <SkeletonBlock className="h-4 w-20" />
+          <SkeletonBlock className="mt-3 h-8 w-14 sm:h-9" />
+        </div>
+      ))}
     </div>
   );
 }
@@ -45,42 +40,46 @@ export function DashboardTableSkeleton() {
         <SkeletonBlock className="h-3 w-14" />
       </div>
 
-      {/* Rows */}
-      <div>
+      {/* Mobile rows */}
+      <div className="sm:hidden">
         {Array.from({ length: 5 }).map((_, index) => (
           <div
             key={index}
-            className="grid grid-cols-2 gap-3 border-b px-4 py-4 last:border-b-0 sm:grid-cols-6 sm:gap-4"
+            className="flex flex-col gap-3 border-b px-4 py-4 last:border-b-0"
           >
-            <div>
-              <SkeletonBlock className="h-3 w-10 sm:hidden" />
-              <SkeletonBlock className="mt-2 h-4 w-20" />
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <SkeletonBlock className="h-4 w-16" />
+                <SkeletonBlock className="mt-2 h-3 w-20" />
+              </div>
+
+              <SkeletonBlock className="h-3 w-20" />
             </div>
 
-            <div>
-              <SkeletonBlock className="h-3 w-12 sm:hidden" />
-              <SkeletonBlock className="mt-2 h-4 w-14" />
+            <div className="flex items-center gap-3">
+              <SkeletonBlock className="h-4 w-10" />
+              <SkeletonBlock className="h-3 w-3" />
+              <SkeletonBlock className="h-4 w-10" />
             </div>
 
-            <div>
-              <SkeletonBlock className="h-3 w-16 sm:hidden" />
-              <SkeletonBlock className="mt-2 h-4 w-24" />
-            </div>
+            <SkeletonBlock className="h-3 w-24" />
+          </div>
+        ))}
+      </div>
 
-            <div>
-              <SkeletonBlock className="h-3 w-10 sm:hidden" />
-              <SkeletonBlock className="mt-2 h-4 w-10" />
-            </div>
-
-            <div>
-              <SkeletonBlock className="h-3 w-10 sm:hidden" />
-              <SkeletonBlock className="mt-2 h-4 w-10" />
-            </div>
-
-            <div>
-              <SkeletonBlock className="h-3 w-14 sm:hidden" />
-              <SkeletonBlock className="mt-2 h-4 w-20" />
-            </div>
+      {/* Desktop rows */}
+      <div className="hidden sm:block">
+        {Array.from({ length: 5 }).map((_, index) => (
+          <div
+            key={index}
+            className="grid grid-cols-6 gap-4 border-b px-4 py-4 last:border-b-0"
+          >
+            <SkeletonBlock className="h-4 w-20" />
+            <SkeletonBlock className="h-4 w-14" />
+            <SkeletonBlock className="h-4 w-24" />
+            <SkeletonBlock className="h-4 w-10" />
+            <SkeletonBlock className="h-4 w-10" />
+            <SkeletonBlock className="h-4 w-20" />
           </div>
         ))}
       </div>

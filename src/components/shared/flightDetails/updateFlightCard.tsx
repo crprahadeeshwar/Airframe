@@ -16,62 +16,71 @@ interface UpdateFlightDetailsCardProps {
   onClose: () => void;
   onSuccess: () => void;
 }
-export default function UpdateFlightDetailsCard({ flight, onClose, onSuccess }: UpdateFlightDetailsCardProps) {
+export default function UpdateFlightDetailsCard({
+  flight,
+  onClose,
+  onSuccess,
+}: UpdateFlightDetailsCardProps) {
   const updateFlightViaForm = updateFlight.bind(null, flight.id);
 
   const initialState: UpdateState = {
-    status: 'idle',
-    message: ''
+    status: "idle",
+    message: "",
   };
 
-  const [state, formAction, isPending] = useActionState(updateFlightViaForm, initialState);
+  const [state, formAction, isPending] = useActionState(
+    updateFlightViaForm,
+    initialState
+  );
 
   useEffect(() => {
-    if (state.status === 'success') {
+    if (state.status === "success") {
       onSuccess();
+
       toast.add({
-            type: "success",
-            description: "Flight has been updated.",
-          })
+        type: "success",
+        description: "Flight has been updated.",
+      });
     }
-    if (state.status === 'error') {
+
+    if (state.status === "error") {
       toast.add({
-            type: "error",
-            description: "Flight could not be updated",
-            priority: "high"
-          })
+        type: "error",
+        description: "Flight could not be updated",
+        priority: "high",
+      });
     }
   }, [state.status, onSuccess]);
 
   return (
-    <div>
-    <Card className="mx-auto w-full max-w-3xl">
-      <CardHeader>
+    <Card className="mx-auto w-full">
+      <CardHeader className="px-5 py-5 sm:px-6">
         <div>
-          <h1 className="text-2xl font-semibold">Edit Flight</h1>
-          <p className="text-sm text-muted-foreground">
+          <h1 className="text-xl font-semibold sm:text-2xl">
+            Edit Flight
+          </h1>
+
+          <p className="mt-1 text-sm text-muted-foreground">
             Update the details of this flight log.
           </p>
         </div>
       </CardHeader>
 
-      <CardContent>
+      <CardContent className="px-5 sm:px-6">
         <form action={formAction}>
           <div className="space-y-8">
-
-            
             <section>
               <div className="mb-4">
                 <h2 className="text-lg font-semibold">
                   Flight Information
                 </h2>
+
                 <p className="text-sm text-muted-foreground">
                   Basic information about the flight.
                 </p>
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2">
-
                 <label className="grid gap-2">
                   <span className="text-sm font-medium">
                     Flight Number
@@ -82,7 +91,7 @@ export default function UpdateFlightDetailsCard({ flight, onClose, onSuccess }: 
                     name="flight_number"
                     defaultValue={flight?.flight_number ?? ""}
                     placeholder="EK525"
-                    className="rounded-md border bg-background px-3 py-2"
+                    className="w-full rounded-md border bg-background px-3 py-2"
                   />
                 </label>
 
@@ -94,8 +103,12 @@ export default function UpdateFlightDetailsCard({ flight, onClose, onSuccess }: 
                   <input
                     type="date"
                     name="date"
-                    defaultValue={flight?.date ? flight.date.toISOString().split("T")[0] : ""}                    
-                    className="rounded-md border bg-background px-3 py-2"
+                    defaultValue={
+                      flight?.date
+                        ? flight.date.toISOString().split("T")[0]
+                        : ""
+                    }
+                    className="w-full rounded-md border bg-background px-3 py-2"
                   />
                 </label>
 
@@ -109,7 +122,7 @@ export default function UpdateFlightDetailsCard({ flight, onClose, onSuccess }: 
                     name="airline"
                     defaultValue={flight?.airline ?? ""}
                     placeholder="Emirates"
-                    className="rounded-md border bg-background px-3 py-2"
+                    className="w-full rounded-md border bg-background px-3 py-2"
                   />
                 </label>
 
@@ -123,19 +136,18 @@ export default function UpdateFlightDetailsCard({ flight, onClose, onSuccess }: 
                     name="aircraft_type"
                     defaultValue={flight?.aircraft_type ?? ""}
                     placeholder="B777-300ER"
-                    className="rounded-md border bg-background px-3 py-2"
+                    className="w-full rounded-md border bg-background px-3 py-2"
                   />
                 </label>
-
               </div>
             </section>
-
 
             <section>
               <div className="mb-4">
                 <h2 className="text-lg font-semibold">
                   Aircraft
                 </h2>
+
                 <p className="text-sm text-muted-foreground">
                   Aircraft identification details.
                 </p>
@@ -151,24 +163,23 @@ export default function UpdateFlightDetailsCard({ flight, onClose, onSuccess }: 
                   name="registration"
                   defaultValue={flight?.registration ?? ""}
                   placeholder="A6-EQH"
-                  className="rounded-md border bg-background px-3 py-2"
+                  className="w-full rounded-md border bg-background px-3 py-2"
                 />
               </label>
             </section>
-
 
             <section>
               <div className="mb-4">
                 <h2 className="text-lg font-semibold">
                   Route
                 </h2>
+
                 <p className="text-sm text-muted-foreground">
                   Departure and arrival airports.
                 </p>
               </div>
 
               <div className="grid gap-4 sm:grid-cols-[1fr_auto_1fr] sm:items-end">
-
                 <label className="grid gap-2">
                   <span className="text-sm font-medium">
                     Departure
@@ -179,7 +190,7 @@ export default function UpdateFlightDetailsCard({ flight, onClose, onSuccess }: 
                     name="departure"
                     defaultValue={flight?.departure ?? ""}
                     placeholder="HYD"
-                    className="rounded-md border bg-background px-3 py-2 uppercase"
+                    className="w-full rounded-md border bg-background px-3 py-2 uppercase"
                   />
                 </label>
 
@@ -197,10 +208,9 @@ export default function UpdateFlightDetailsCard({ flight, onClose, onSuccess }: 
                     name="arrival"
                     defaultValue={flight?.arrival ?? ""}
                     placeholder="DXB"
-                    className="rounded-md border bg-background px-3 py-2 uppercase"
+                    className="w-full rounded-md border bg-background px-3 py-2 uppercase"
                   />
                 </label>
-
               </div>
             </section>
 
@@ -209,6 +219,7 @@ export default function UpdateFlightDetailsCard({ flight, onClose, onSuccess }: 
                 <h2 className="text-lg font-semibold">
                   Notes
                 </h2>
+
                 <p className="text-sm text-muted-foreground">
                   Anything worth remembering about this flight.
                 </p>
@@ -223,26 +234,34 @@ export default function UpdateFlightDetailsCard({ flight, onClose, onSuccess }: 
               />
             </section>
 
-
-            <div className="flex justify-end gap-3 border-t pt-6">
-              <Button type="button" variant="outline" onClick={onClose}>
+            <div className="flex flex-col-reverse gap-2 border-t pt-6 sm:flex-row sm:justify-end sm:gap-3">
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full sm:w-auto"
+                onClick={onClose}
+              >
                 Cancel
               </Button>
 
-              <Button type="submit" disabled={isPending} >
-                {isPending ? 'Saving...' : 'Save Changes'}
+              <Button
+                type="submit"
+                disabled={isPending}
+                className="w-full sm:w-auto"
+              >
+                {isPending ? "Saving..." : "Save Changes"}
               </Button>
             </div>
-
           </div>
         </form>
-        {state.status === 'error' && (
-      <ErrorAlert title='An Error Occured.' message={state.message}/>
-        )
-        }
-      </CardContent>  
+
+        {state.status === "error" && (
+          <ErrorAlert
+            title="An Error Occured."
+            message={state.message}
+          />
+        )}
+      </CardContent>
     </Card>
-    
-    </div>
   );
 }

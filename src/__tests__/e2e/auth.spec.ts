@@ -3,14 +3,14 @@ import { createTestUser, deleteTestuser, getUserIdByEmail } from "./fixtures";
 
 test.describe("Authentication", () => {
 
-    test("login page loads", async ({ page }) => {
-        await page.goto("/");
+   test("login page loads", async ({ page }) => {
+        await page.goto("/login");
 
         await expect(page).toHaveTitle("Airframe");
 
         await expect(
             page.getByRole("heading", {
-            name: "Welcome to Airframe.",
+                name: "Welcome to Airframe.",
             })
         ).toBeVisible();
 
@@ -19,11 +19,10 @@ test.describe("Authentication", () => {
 
         await expect(
             page.getByRole("button", {
-            name: "Login",
+                name: "Login",
             })
         ).toBeVisible();
     });
-
     test("signup redirects to login", async ({ page }) => {
         const email = `e2e-${crypto.randomUUID()}@example.com`;
         const password = "Abc12345#";

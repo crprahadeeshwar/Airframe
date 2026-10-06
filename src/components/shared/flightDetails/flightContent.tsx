@@ -20,7 +20,6 @@ interface FlightContentProps {
 export default function FlightContent({
   flightDataArrayProps,
 }: FlightContentProps) {
-
   const router = useRouter();
 
   const [selectedFlight, setSelectedFlight] =
@@ -50,18 +49,15 @@ export default function FlightContent({
   };
 
   const handleDeleteSuccess = () => {
-
     setSelectedFlight(null);
-
     router.refresh();
-
   };
 
   return (
     <div className="flex min-h-full flex-col">
       <FlightHeader />
 
-      <main className="flex-1 space-y-6 p-6">
+      <main className="flex-1 space-y-6 p-4 sm:p-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h1 className="text-2xl font-semibold tracking-tight">
@@ -73,8 +69,10 @@ export default function FlightContent({
             </p>
           </div>
 
-          <Link href="/flights/new">
-              <Button type="button" variant='default'>Add Flight</Button>
+          <Link href="/flights/new" className="w-full sm:w-auto">
+            <Button type="button" className="w-full sm:w-auto">
+              Add Flight
+            </Button>
           </Link>
         </div>
 
@@ -86,37 +84,44 @@ export default function FlightContent({
         />
       </main>
 
-        {selectedFlight !== null && !isEdit && (
+      {/* Flight details */}
+      {selectedFlight !== null && !isEdit && (
+        <div
+          className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 px-3 py-4 backdrop-blur-sm sm:items-center sm:px-4 sm:py-8"
+          onClick={handleDetailsClose}
+        >
           <div
-            className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 px-4 py-8 backdrop-blur-sm"
-            onClick={handleDetailsClose}
+            className="w-full max-w-2xl"
+            onClick={(event) => event.stopPropagation()}
           >
-            <div onClick={(event) => event.stopPropagation()}>
-              <FlightDetailsCard
-                flightData={selectedFlight}
-                onClose={handleDetailsClose}
-                openEdit={handleEditOpen}
-                onDeleteSuccess={handleDeleteSuccess}
-              />
-            </div>
+            <FlightDetailsCard
+              flightData={selectedFlight}
+              onClose={handleDetailsClose}
+              openEdit={handleEditOpen}
+              onDeleteSuccess={handleDeleteSuccess}
+            />
           </div>
-          )}
+        </div>
+      )}
 
-        {selectedFlight !== null && isEdit && (
+      {/* Edit flight */}
+      {selectedFlight !== null && isEdit && (
+        <div
+          className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 px-3 py-4 backdrop-blur-sm sm:px-4 sm:py-8"
+          onClick={handleEditClose}
+        >
           <div
-            className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 px-4 py-8 backdrop-blur-sm"
-            onClick={handleEditClose}
+            className="w-full max-w-3xl"
+            onClick={(event) => event.stopPropagation()}
           >
-            <div onClick={(event) => event.stopPropagation()}>
-              <UpdateFlightDetailsCard
-                flight={selectedFlight}
-                onClose={handleEditClose}
-                onSuccess={handleEditSuccess}
-              />
-            </div>
+            <UpdateFlightDetailsCard
+              flight={selectedFlight}
+              onClose={handleEditClose}
+              onSuccess={handleEditSuccess}
+            />
           </div>
-          )}
-
+        </div>
+      )}
     </div>
   );
 }

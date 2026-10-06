@@ -24,6 +24,7 @@ test("User can search and filter flights", async ({ page }) => {
 
         await expect(page).toHaveURL("/flights");
 
+        // Create LH454
         await page.getByRole("button", {
             name: "Add Flight",
         }).click();
@@ -38,8 +39,14 @@ test("User can search and filter flights", async ({ page }) => {
         }).click();
 
         await expect(page).toHaveURL("/flights");
-        await expect(page.getByText("LH454")).toBeVisible();
 
+        const lh454 = page.getByRole("button", {
+            name: /LH454/,
+        });
+
+        await expect(lh454).toBeVisible();
+
+        // Create EK525
         await page.getByRole("button", {
             name: "Add Flight",
         }).click();
@@ -54,26 +61,34 @@ test("User can search and filter flights", async ({ page }) => {
         }).click();
 
         await expect(page).toHaveURL("/flights");
-        await expect(page.getByText("EK525")).toBeVisible();
 
+        const ek525 = page.getByRole("button", {
+            name: /EK525/,
+        });
+
+        await expect(ek525).toBeVisible();
+
+        // Search by flight number
         await page.goto("/flights?search=LH454");
 
         await expect(page).toHaveURL(
             /\/flights\?search=LH454/
         );
 
-        await expect(page.getByText("LH454")).toBeVisible();
-        await expect(page.getByText("EK525")).not.toBeVisible();
+        await expect(lh454).toBeVisible();
+        await expect(ek525).not.toBeVisible();
 
+        // Search by airline
         await page.goto("/flights?search=Emirates");
 
         await expect(page).toHaveURL(
             /\/flights\?search=Emirates/
         );
 
-        await expect(page.getByText("EK525")).toBeVisible();
-        await expect(page.getByText("LH454")).not.toBeVisible();
+        await expect(ek525).toBeVisible();
+        await expect(lh454).not.toBeVisible();
 
+        // Filter by flight number + search
         await page.goto(
             "/flights?filter=flight_number&search=LH454"
         );
@@ -82,8 +97,8 @@ test("User can search and filter flights", async ({ page }) => {
             /filter=flight_number.*search=LH454/
         );
 
-        await expect(page.getByText("LH454")).toBeVisible();
-        await expect(page.getByText("EK525")).not.toBeVisible();
+        await expect(lh454).toBeVisible();
+        await expect(ek525).not.toBeVisible();
 
     } finally {
         await deleteTestFlights(user.id);

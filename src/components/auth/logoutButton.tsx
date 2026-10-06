@@ -11,7 +11,7 @@ export function LogoutButton() {
         variant="ghost"
         className="w-full justify-start gap-3 text-muted-foreground hover:text-foreground"
       >
-        <LogOut className="h-4 w-4" />
+        <LogOut className="h-4 w-4 shrink-0" />
         <span>Log out</span>
       </Button>
     </form>

@@ -2,6 +2,8 @@ import * as z from "zod";
 
 const uuidSchema = z.uuid();
 
+const stringSchema = z.string();
+
 const emptyToNull = (val: string | null) => 
   val === null || val.trim() === '' ? null : val;
 
@@ -79,6 +81,13 @@ export const SearchQueryParamsSchema = z.object({
   search: searchSchema,
 });
 
+export type AuthFormState = {
+  field: { email: string }
+  status: 'idle' | 'success' | 'error'
+  errorMessage: string;
+  errorType: "validation" | "operation" | "none";
+}
+
 export type FormState = {
   status: 'idle' | 'success' | 'error'
   errorMessage: string;
@@ -87,6 +96,7 @@ export type FormState = {
 
 export {
     uuidSchema, 
+    stringSchema,
     FlightInputSchema,
     FlightSchema,
     FlightTestSchema,

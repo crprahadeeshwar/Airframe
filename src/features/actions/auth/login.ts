@@ -2,31 +2,48 @@
 
 import { createClient } from "@/src/lib/supabase/server";
 import { redirect } from "next/navigation";
-import { EmailSchema, PasswordSchema } from "@/src/schemas/flightSchemas";
+import { EmailSchema, stringSchema, type AuthFormState } from "@/src/schemas/flightSchemas";
 import { logger } from "@/src/lib/logger";
 
-export async function login(formData: FormData) {
+export async function login(
+    prevState: AuthFormState,
+    formData: FormData
+): Promise<AuthFormState> {
 
     const supabase = await createClient();
 
-    const email = EmailSchema.parse(formData.get('email'));
-    const password = PasswordSchema.parse(formData.get('password'));
+    const email = EmailSchema.safeParse(formData.get('email'));
+    const password = stringSchema.safeParse(formData.get('password'));
 
-    const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password
-    });
-
-    if (error) {
-        logger.error(
-            "auth.login.failed",
-            "Login failed",
-            { errorType: "authentication" },
-            error
-        );
-
-        redirect(`/login?error=${encodeURIComponent(error.message)}`);
+    if(!email.success) {
+        return {
+            field: { email: "" },
+            status: "error",
+            errorMessage: "Invalid email",
+            errorType: "validation",
+        };
     }
+    if(email.success && password.success){
+        const { error } = await supabase.auth.signInWithPassword({
+            email: email.data,
+            password: password.data
+        });
+
+        if (error) {
+            logger.error(
+                "auth.login.failed",
+                "Login failed",
+                { errorType: "authentication" },
+                error
+            );
+
+            return {
+                field: { email: email.data },
+                status: "error",
+                errorMessage: "Invalid email or password. Please try again!",
+                errorType: "operation",
+            };
+        }}
 
     logger.info(
         "auth.login.success",

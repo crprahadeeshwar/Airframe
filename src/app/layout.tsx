@@ -1,7 +1,6 @@
-// app/layout.tsx
+import "./globals.css";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
-import "./globals.css";
 import { cn } from "@/src/lib/utils";
 import { Toaster } from "../components/ui/toast";
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
@@ -17,11 +16,16 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Airframe",
-  description: "A personal flight log.",
+  title: { 
+    default: "Airframe",
+    template: "%s | Airframe",
+  },
+  description: "Keep track of your flights and travel history.",
 };
 
 // Replace LayoutProps<"/"> with explicit React props:
+// ... your imports and font configs remain the same
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -32,6 +36,7 @@ export default function RootLayout({
       lang="en"
       className={cn(
         "h-full",
+        "w-full",
         "antialiased",
         geistSans.variable,
         geistMono.variable,
@@ -39,10 +44,10 @@ export default function RootLayout({
         inter.variable
       )}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full w-full flex flex-col items-stretch"> 
         {children}
         <Toaster />
-        </body>
+      </body>
     </html>
   );
 }

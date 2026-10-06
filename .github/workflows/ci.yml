@@ -24,17 +24,6 @@ jobs:
       - name: Install Playwright
         run: npx playwright install --with-deps chromium
 
-      - name: Run E2E tests
-        run: npm exec playwright test
-        env:
-            NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-            NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
-            SUPABASE_SECRET_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SECRET_SERVICE_ROLE_KEY }}
-
-            SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-            SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
-            SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_SERVICE_ROLE_KEY }}
-            
       - name: Start Supabase
         run: npx supabase start
 
@@ -43,27 +32,29 @@ jobs:
 
       - name: Load local Supabase environment
         run: |
-            npx supabase status --output env > supabase.env
+          npx supabase status --output env > supabase.env
 
-            {
+          {
             echo "SUPABASE_URL=$(grep '^API_URL=' supabase.env | cut -d'=' -f2- | tr -d '\"')"
             echo "SUPABASE_PUBLISHABLE_KEY=$(grep '^PUBLISHABLE_KEY=' supabase.env | cut -d'=' -f2- | tr -d '\"')"
             echo "SUPABASE_SECRET_KEY=$(grep '^SECRET_KEY=' supabase.env | cut -d'=' -f2- | tr -d '\"')"
             echo "NEXT_PUBLIC_SUPABASE_URL=$(grep '^API_URL=' supabase.env | cut -d'=' -f2- | tr -d '\"')"
             echo "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=$(grep '^PUBLISHABLE_KEY=' supabase.env | cut -d'=' -f2- | tr -d '\"')"
             echo "SUPABASE_SECRET_SERVICE_ROLE_KEY=$(grep '^SERVICE_ROLE_KEY=' supabase.env | cut -d'=' -f2- | tr -d '\"')"
-            } > .env.test.local
+          } > .env.test.local
+
       - name: Check test environment
         run: |
-            echo "Environment file:"
-            cat .env.test.local | sed 's/=.*/=<redacted>/'
-            echo "Expected variables:"
-            grep -E '^(SUPABASE_URL|SUPABASE_PUBLISHABLE_KEY|SUPABASE_SECRET_KEY)=' .env.test.local || true
+          echo "Environment file:"
+          cat .env.test.local | sed 's/=.*/=<redacted>/'
 
-      - name: Run tests
-        run: npm test -- --mode test --run
-      
-      - name: Run tests
+          echo "Expected variables:"
+          grep -E '^(SUPABASE_URL|SUPABASE_PUBLISHABLE_KEY|SUPABASE_SECRET_KEY)=' .env.test.local || true
+
+      - name: Run E2E tests
+        run: npm exec playwright test
+
+      - name: Run unit tests
         run: npm test -- --mode test --run
 
       - name: Lint

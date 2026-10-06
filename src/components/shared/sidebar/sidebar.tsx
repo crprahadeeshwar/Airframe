@@ -23,7 +23,7 @@ const menuItems: MenuItem[] = [
 
 export default function Sidebar() {
   return (
-    <aside className="flex h-screen w-60 flex-col border-r bg-muted/30">
+    <aside className="hidden h-screen w-60 shrink-0 flex-col border-r bg-muted/30 md:flex">
       <SidebarHeader title="Airframe" />
 
       <div className="flex-1 px-3 py-4">
