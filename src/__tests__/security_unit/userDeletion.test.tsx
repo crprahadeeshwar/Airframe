@@ -37,6 +37,11 @@ describe("user deletion", () => {
         if (flightError) throw flightError;
 
         expect(flight.user_id).toBe(userId);
+        console.log("SUPABASE URL:", process.env.SUPABASE_URL);
+console.log(
+    "SECRET KEY PREFIX:",
+    process.env.SUPABASE_SECRET_KEY?.slice(0, 12)
+);
 
         const { error: deleteError } =
             await adminSupabase.auth.admin.deleteUser(userId);
