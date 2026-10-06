@@ -9,7 +9,8 @@ export async function loginWithGoogle() {
 
     const siteUrl =
         process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-
+console.log("OAuth site URL:", siteUrl);
+console.log("OAuth redirect:", `${siteUrl}/auth/callback?next=/flights`);
     const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
