@@ -5,21 +5,40 @@ export async function GET(request: Request) {
     const { searchParams, origin } = new URL(request.url);
 
     const code = searchParams.get("code");
-    const next = searchParams.get("next") ?? "/flights";
+    let next = searchParams.get("next") ?? "/flights";
 
-    if (!code) {
-        return NextResponse.redirect(`${origin}/login?error=oauth`);
-    }
-    
-    const supabase = await createClient();
-
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
-
-    if (error) {
-        return NextResponse.redirect(`${origin}/login?error=oauth`);
+    if (!next.startsWith("/")) {
+        next = "/flights";
     }
 
-    const safeNext = next.startsWith("/") ? next : "/flights";
+    if (code) {
+        const supabase = await createClient();
 
-    return NextResponse.redirect(`${origin}${safeNext}`);
+        const { error } =
+            await supabase.auth.exchangeCodeForSession(code);
+
+        if (!error) {
+            const forwardedHost =
+                request.headers.get("x-forwarded-host");
+
+            const isLocalEnv =
+                process.env.NODE_ENV === "development";
+
+            if (isLocalEnv) {
+                return NextResponse.redirect(`${origin}${next}`);
+            }
+
+            if (forwardedHost) {
+                return NextResponse.redirect(
+                    `https://${forwardedHost}${next}`
+                );
+            }
+
+            return NextResponse.redirect(`${origin}${next}`);
+        }
+
+        console.error("OAuth code exchange failed:", error);
+    }
+
+    return NextResponse.redirect(`${origin}/login?error=oauth`);
 }
